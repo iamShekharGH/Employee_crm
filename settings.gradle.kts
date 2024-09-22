@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Employee CRM"
 include(":app")
- 
+include(":theme")
