@@ -53,9 +53,7 @@ fun LoginUI() {
                 onValueChange = {
                     username = it
                 },
-                label = {
-                    Text(text = "Username")
-                }
+                label = { Text(text = "Username") }
             )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -63,9 +61,7 @@ fun LoginUI() {
                 onValueChange = {
                     password = it
                 },
-                label = {
-                    Text(text = "Password")
-                }
+                label = { Text(text = "Password") }
             )
         }
 
