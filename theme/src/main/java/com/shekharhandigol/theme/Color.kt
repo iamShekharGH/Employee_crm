@@ -1,4 +1,4 @@
-package com.shekharhandigol.theme.theme
+package com.shekharhandigol.theme
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF17143A)

@@ -1,4 +1,4 @@
-package com.shekharhandigol.theme.theme
+package com.shekharhandigol.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

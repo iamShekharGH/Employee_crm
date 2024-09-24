@@ -44,7 +44,12 @@ dependencies {
     implementation(libs.androidx.ui.graphics.android)
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.androidx.ui.tooling.preview.android)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.play.services.base)
+    implementation(libs.play.services.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    debugImplementation(libs.ui.tooling)
 }
