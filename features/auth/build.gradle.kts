@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.compose.compiler)
+
+
 }
 
 android {
@@ -31,9 +35,19 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
 }
 
 dependencies {
+
+    implementation(project(":theme"))
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
@@ -44,6 +58,12 @@ dependencies {
     implementation(libs.facebook.android.sdk)
 
     implementation(libs.firebase.analytics)
+
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
 
 
 

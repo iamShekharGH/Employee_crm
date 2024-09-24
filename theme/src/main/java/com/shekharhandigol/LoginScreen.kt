@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.shekharhandigol.theme.BothPreview
+import com.shekharhandigol.theme.BothPreviews
 
 @Composable
 //fun LoginScreen(navController: NavController) {
@@ -60,7 +60,7 @@ fun signInWithGoogle(navController: NavController?) {
 
 }
 
-@BothPreview
+@BothPreviews
 @Composable
 fun PreviewLoginScreen() {
     LoginScreen()
