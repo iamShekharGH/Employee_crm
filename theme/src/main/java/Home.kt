@@ -4,7 +4,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.shekharhandigol.theme.BothPreview
+import com.shekharhandigol.theme.BothPreviews
 import com.shekharhandigol.theme.EmployeeCRMTheme
 
 
@@ -33,7 +33,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@BothPreview
+@BothPreviews
 @Composable
 fun GreetingPreview() {
     EmployeeCRMTheme {
