@@ -4,4 +4,7 @@
     <string name="welcome_to_employee">Welcome to Employee Management Tool!
         Your one-stop solution for HR efficiency.</string>
     <string name="get_started">Get Started</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
 </resources>

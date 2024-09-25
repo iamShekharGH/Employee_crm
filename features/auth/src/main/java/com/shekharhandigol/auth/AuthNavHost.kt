@@ -1,5 +1,6 @@
 package com.shekharhandigol.auth
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -30,7 +31,8 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
             }
         }
         composable<Destinations.LoginScreen> {
-            LoginScreen()
+            LoginScreen(hiltViewModel())
+//            LoginScreen()
         }
     }
 }
