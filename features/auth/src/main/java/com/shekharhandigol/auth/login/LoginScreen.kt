@@ -26,11 +26,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shekharhandigol.auth.R
 import com.shekharhandigol.theme.BothPreviews
 
 @Composable
-fun LoginScreen(viewModel: LoginScreenViewModel) {
+fun LoginScreen(viewModel: LoginScreenViewModel = viewModel()) {
 
     LoginUI(
         login = viewModel.loginToAccount,
