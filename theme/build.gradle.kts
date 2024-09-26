@@ -34,9 +34,16 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
 }
 
 dependencies {
+
+
+    implementation(libs.androidx.runtime)
+    implementation(libs.androidx.runtime.livedata)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

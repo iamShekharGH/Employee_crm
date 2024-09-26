@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
+
 }
 
 android {
@@ -30,9 +32,19 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
 }
 
 dependencies {
+
+
+    implementation(libs.androidx.runtime)
+    implementation(libs.androidx.runtime.livedata)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
