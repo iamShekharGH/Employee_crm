@@ -17,5 +17,6 @@ local.properties
 # Project exclude paths
 /app/
 /gradle/
+/.idea/
 
 features/auth/google-services.json
