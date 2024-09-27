@@ -76,7 +76,7 @@ dependencies {
 
     implementation(libs.androidx.hilt.navigation.compose)
 
-    debugImplementation(libs.androidx.ui.tooling.v170)
+    debugImplementation(libs.androidx.ui.tooling)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
