@@ -8,19 +8,19 @@ import com.shekharhandigol.profile.ProfileScreen
 import kotlinx.serialization.Serializable
 
 
-sealed class Destinations {
+sealed class ProfileDestinations {
 
     @Serializable
-    data object Profile : Destinations()
+    data object Profile : ProfileDestinations()
 
     @Serializable
-    data object ProfileModule : Destinations()
+    data object ProfileModule : ProfileDestinations()
 }
 
 
 fun NavGraphBuilder.profileNavGraph(navController: NavController) {
-    navigation<Destinations.ProfileModule>(startDestination = Destinations.Profile) {
-        composable<Destinations.Profile> {
+    navigation<ProfileDestinations.ProfileModule>(startDestination = ProfileDestinations.Profile) {
+        composable<ProfileDestinations.Profile> {
             ProfileScreen()
         }
     }

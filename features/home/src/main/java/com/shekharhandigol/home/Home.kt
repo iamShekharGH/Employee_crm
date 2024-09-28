@@ -4,8 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +12,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -74,7 +71,7 @@ fun HomeUI() {
             )
         },
         bottomBar = {
-            BottomAppBar(
+            /*BottomAppBar(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentPadding = PaddingValues(0.dp),
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -86,36 +83,25 @@ fun HomeUI() {
                 ) {
                     IconButton(onClick = {}) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Filled.AccountCircle,
                             contentDescription = ""
                         )
                     }
                     IconButton(onClick = {}) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Default.DateRange,
                             contentDescription = ""
                         )
                     }
                     IconButton(onClick = {}) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Filled.Home,
                             contentDescription = ""
                         )
                     }
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = ""
-                        )
-                    }
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = ""
-                        )
-                    }
+
                 }
-            }
+            }*/
         }
     ) { innerPadding ->
         Column(
@@ -123,10 +109,29 @@ fun HomeUI() {
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            var items by remember { mutableStateOf((1..100).toList()) }
+
+
+            var items by remember { mutableStateOf((1..20).toList()) }
             val listState = rememberLazyListState()
             val coroutineScope = rememberCoroutineScope()
             var isLoading by remember { mutableStateOf(true) }
+
+            LaunchedEffect(listState) {
+                snapshotFlow { listState.layoutInfo.visibleItemsInfo }
+                    .collect { visibleItems ->
+                        val lastVisibleItemIndex = visibleItems.lastOrNull()?.index
+                        if (lastVisibleItemIndex == items.size - 1 && !isLoading) {
+                            coroutineScope.launch {
+                                isLoading = true
+                                // Simulate loading more data
+                                delay(2000)
+                                val nextItems = items.size + 1..items.size + 5
+                                items = items + nextItems.toList()
+                                isLoading = false
+                            }
+                        }
+                    }
+            }
 
             LazyColumn(
                 state = listState,
@@ -134,6 +139,7 @@ fun HomeUI() {
                     .fillMaxSize()
                     .background(color = MaterialTheme.colorScheme.tertiaryContainer)
             ) {
+
                 items(items.size) { index ->
                     EmployeeCard()
                 }
@@ -150,23 +156,6 @@ fun HomeUI() {
                     }
                 }
 
-            }
-
-            LaunchedEffect(listState) {
-                snapshotFlow { listState.layoutInfo.visibleItemsInfo }
-                    .collect { visibleItems ->
-                        val lastVisibleItemIndex = visibleItems.lastOrNull()?.index
-                        if (lastVisibleItemIndex == items.size - 1 && !isLoading) {
-                            coroutineScope.launch {
-                                isLoading = true
-                                // Simulate loading more data
-                                delay(2000)
-                                val nextItems = items.size + 1..items.size + 20
-                                items = items + nextItems.toList()
-                                isLoading = false
-                            }
-                        }
-                    }
             }
         }
     }
