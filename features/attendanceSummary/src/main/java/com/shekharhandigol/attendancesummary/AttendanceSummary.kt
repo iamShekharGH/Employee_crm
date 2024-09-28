@@ -43,14 +43,15 @@ fun AttendanceSummaryUI() {
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         topBar = {
-            TopAppBar(title = { Text(text = "Attendance Summary") }, navigationIcon = {
-                IconButton(onClick = {}) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = ""
-                    )
-                }
-            })
+            TopAppBar(title = { Text(text = "Attendance Summary") },
+                navigationIcon = {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = ""
+                        )
+                    }
+                })
         }
     ) { padding ->
         Column(
@@ -110,7 +111,6 @@ fun AttendanceSummaryUI() {
                             8.dp
                         ),
                     colors = CardColors(
-//                        containerColor = MaterialTheme.colorScheme.tertiary,
                         containerColor = Color(0xFF008000),
                         disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                         disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
