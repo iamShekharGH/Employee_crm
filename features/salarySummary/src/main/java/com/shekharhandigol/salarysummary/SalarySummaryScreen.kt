@@ -50,6 +50,22 @@ fun SalarySummaryUI() {
                 .padding(padding)
                 .fillMaxSize()
         ) {
+
+            ElevatedCard(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+
+                ) {
+                Column(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                ) {
+                    RowInformation(heading = "Net Salary :", body = "₹48,133", larger = true)
+                    RowInformation(heading = "Earnings - Deductions", body = "₹66,667-₹18,534")
+                }
+            }
             ElevatedCard(
                 modifier = Modifier
                     .padding(8.dp)
@@ -102,31 +118,6 @@ fun SalarySummaryUI() {
                     RowInformation("Total Deductions", "₹ 18,534")
 
                 }
-            }
-            ElevatedCard(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-
-                ) {
-                Column(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                ){
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp, bottom = 6.dp),
-                        text = "Net Salary : ₹48,133",
-                        fontSize = 21.sp, textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Text(
-                        text = "Total Earnings(₹66,667) - Total Deductions(₹18,534)",
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                }
-
-
             }
         }
     }

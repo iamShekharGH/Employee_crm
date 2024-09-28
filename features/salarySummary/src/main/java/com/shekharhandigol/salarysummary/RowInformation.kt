@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import com.shekharhandigol.theme.BothPreviews
 
 @Composable
-fun RowInformation(heading: String, body: String) {
+fun RowInformation(heading: String, body: String, larger: Boolean = false) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -19,11 +19,11 @@ fun RowInformation(heading: String, body: String) {
     ) {
         Text(
             text = heading,
-            style = MaterialTheme.typography.titleMedium
+            style = if (larger) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleMedium
         )
         Text(
             text = body,
-            style = MaterialTheme.typography.labelLarge
+            style = if (larger) MaterialTheme.typography.titleLarge else MaterialTheme.typography.labelLarge
         )
     }
 }
