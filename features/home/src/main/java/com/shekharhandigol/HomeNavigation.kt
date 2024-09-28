@@ -7,18 +7,18 @@ import androidx.navigation.compose.navigation
 import com.shekharhandigol.home.HomeScreen
 import kotlinx.serialization.Serializable
 
-sealed class Destination {
+sealed class HomeDestination {
 
     @Serializable
-    data object HomeModule : Destination()
+    data object HomeModule : HomeDestination()
 
     @Serializable
-    data object Home : Destination()
+    data object Home : HomeDestination()
 }
 
 fun NavGraphBuilder.homeNavigationGraph(navController: NavController) {
-    navigation<Destination.HomeModule>(startDestination = Destination.Home) {
-        composable<Destination.Home> {
+    navigation<HomeDestination.HomeModule>(startDestination = HomeDestination.Home) {
+        composable<HomeDestination.Home> {
             HomeScreen()
         }
     }

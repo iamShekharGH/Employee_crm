@@ -12,9 +12,11 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/attendanceSummary" />
             <option value="$PROJECT_DIR$/features/auth" />
             <option value="$PROJECT_DIR$/features/home" />
             <option value="$PROJECT_DIR$/features/profile" />
+            <option value="$PROJECT_DIR$/features/salarySummary" />
             <option value="$PROJECT_DIR$/storage" />
             <option value="$PROJECT_DIR$/theme" />
           </set>

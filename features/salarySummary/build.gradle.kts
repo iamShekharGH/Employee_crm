@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    namespace = "com.shekharhandigol.home"
+    namespace = "com.shekharhandigol.salarysummary"
     compileSdk = 34
 
     defaultConfig {
@@ -45,7 +45,6 @@ android {
 }
 
 dependencies {
-
 
     implementation(project(":theme"))
     implementation(libs.androidx.navigation.compose)

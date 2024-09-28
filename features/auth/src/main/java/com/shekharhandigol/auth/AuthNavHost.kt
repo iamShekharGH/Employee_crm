@@ -8,28 +8,28 @@ import com.shekharhandigol.auth.login.LoginScreen
 import com.shekharhandigol.auth.splash.SplashScreen
 import kotlinx.serialization.Serializable
 
-sealed class Destinations {
+sealed class AuthDestinations {
 
     @Serializable
-    data object AuthModule : Destinations()
+    data object AuthModule : AuthDestinations()
 
     @Serializable
-    data object LoginScreen : Destinations()
+    data object LoginScreen : AuthDestinations()
 
     @Serializable
-    data object Splash : Destinations()
+    data object Splash : AuthDestinations()
 }
 
 
 fun NavGraphBuilder.authNavGraph(navController: NavController) {
 
-    navigation<Destinations.AuthModule>(startDestination = Destinations.Splash) {
-        composable<Destinations.Splash> {
+    navigation<AuthDestinations.AuthModule>(startDestination = AuthDestinations.Splash) {
+        composable<AuthDestinations.Splash> {
             SplashScreen {
-                navController.navigate(Destinations.LoginScreen)
+                navController.navigate(AuthDestinations.LoginScreen)
             }
         }
-        composable<Destinations.LoginScreen> {
+        composable<AuthDestinations.LoginScreen> {
             LoginScreen()
         }
     }
