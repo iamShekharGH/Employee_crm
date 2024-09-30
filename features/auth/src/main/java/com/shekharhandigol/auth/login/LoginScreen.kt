@@ -1,5 +1,6 @@
 package com.shekharhandigol.auth.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,27 +17,48 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shekharhandigol.auth.R
+import com.shekharhandigol.auth.firebaseLogin.SignInState
 import com.shekharhandigol.theme.BothPreviews
 
 @Composable
-fun LoginScreen(viewModel: LoginScreenViewModel = viewModel()) {
+fun LoginScreen(
+    viewModel: LoginScreenViewModel = viewModel(),
+    onSignInClick: () -> Unit
+) {
+    val state = viewModel.loginStateFlow.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+    LaunchedEffect(key1 = state.value.errorMessage) {
+        state.value.errorMessage?.let { error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
 
     LoginUI(
         login = viewModel.loginToAccount,
         validateUsername = viewModel.validateUsername,
-        validatePassword = viewModel.validatePassword
+        validatePassword = viewModel.validatePassword,
+        onSignInClick = viewModel.onSignInClick
     )
 }
 
@@ -44,7 +66,8 @@ fun LoginScreen(viewModel: LoginScreenViewModel = viewModel()) {
 fun LoginUI(
     login: (String, String) -> Pair<Boolean, Boolean>,
     validateUsername: (String) -> Boolean,
-    validatePassword: (String) -> Boolean
+    validatePassword: (String) -> Boolean,
+    onSignInClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -134,13 +157,24 @@ fun LoginUI(
                     if (validationResult.second) {
                         passwordError = true
                     }
-                    if(!(usernameError && passwordError)){
+                    if (!(usernameError && passwordError)) {
 
                     }
 
                 }) {
                 Text(text = stringResource(R.string.login))
             }
+
+            ElevatedButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
+                onClick = {
+                    onSignInClick()
+                }) {
+                Text(text = "Login With Google!")
+            }
+
         }
 
 
@@ -153,5 +187,5 @@ fun LoginUI(
 fun PreviewLoginUI() {
     LoginUI({ _, _ ->
         Pair(false, false)
-    }, { false }, { false })
+    }, { false }, { false }, {})
 }

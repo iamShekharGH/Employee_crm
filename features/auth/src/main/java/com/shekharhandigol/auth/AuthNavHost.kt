@@ -21,7 +21,7 @@ sealed class AuthDestinations {
 }
 
 
-fun NavGraphBuilder.authNavGraph(navController: NavController) {
+fun NavGraphBuilder.authNavGraph(navController: NavController, onSignInClick: () -> Unit) {
 
     navigation<AuthDestinations.AuthModule>(startDestination = AuthDestinations.Splash) {
         composable<AuthDestinations.Splash> {
@@ -30,7 +30,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
             }
         }
         composable<AuthDestinations.LoginScreen> {
-            LoginScreen()
+            LoginScreen(onSignInClick = onSignInClick)
         }
     }
 }
