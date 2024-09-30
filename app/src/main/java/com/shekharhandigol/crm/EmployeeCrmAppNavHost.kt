@@ -5,9 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.shekharhandigol.AttendanceSummaryDestinations
-import com.shekharhandigol.SalarySummaryDestinations
 import com.shekharhandigol.attendanceSummaryNavGraph
+import com.shekharhandigol.auth.AuthDestinations
 import com.shekharhandigol.auth.authNavGraph
 import com.shekharhandigol.homeNavigationGraph
 import com.shekharhandigol.profileNavGraph
@@ -25,16 +24,17 @@ sealed class HomeDestinations {
 }
 
 @Composable
-fun EmployeeCrmAppNavHost(navController: NavHostController) {
+fun EmployeeCrmAppNavHost(navController: NavHostController, onSignInClick: () -> Unit) {
 
     NavHost(
         navController = navController,
 //        startDestination = com.shekharhandigol.auth.Destinations.AuthModule
 //        startDestination = com.shekharhandigol.ProfileDestinations.ProfileModule
-        startDestination = SalarySummaryDestinations.SalarySummaryModule
+//        startDestination = SalarySummaryDestinations.SalarySummaryModule
+        startDestination = AuthDestinations.AuthModule
     ) {
 
-        authNavGraph(navController = navController)
+        authNavGraph(navController = navController, onSignInClick = onSignInClick)
         profileNavGraph(navController = navController)
         homeNavigationGraph(navController = navController)
         attendanceSummaryNavGraph(navController = navController)

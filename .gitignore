@@ -20,3 +20,4 @@ local.properties
 /.idea/
 
 features/auth/google-services.json
+/app/google-services.json

@@ -58,7 +58,7 @@ fun LoginScreen(
         login = viewModel.loginToAccount,
         validateUsername = viewModel.validateUsername,
         validatePassword = viewModel.validatePassword,
-        onSignInClick = viewModel.onSignInClick
+        onSignInClick = onSignInClick
     )
 }
 
