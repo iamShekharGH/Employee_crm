@@ -1,8 +1,8 @@
-package com.shekharhandigol
+package com.shekharhandigol.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.shekharhandigol.models.Employee
+import com.shekharhandigol.data.models.Employee
 
 @Database(entities = [Employee::class], version = 1)
 abstract class EmployeeDatabase : RoomDatabase() {
