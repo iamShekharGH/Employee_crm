@@ -22,12 +22,12 @@ import com.shekharhandigol.auth.R
 import com.shekharhandigol.theme.BothPreviews
 
 @Composable
-fun SplashScreen(navigateToLogin: () -> Unit) {
-    Splash(navigateToLogin)
+fun SplashScreen(navigateToLogin: () -> Unit, navigateToHome: () -> Unit) {
+    Splash(navigateToLogin, navigateToHome)
 }
 
 @Composable
-fun Splash(navigateToLogin: () -> Unit) {
+fun Splash(navigateToLogin: () -> Unit, navigateToHome: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,7 +54,10 @@ fun Splash(navigateToLogin: () -> Unit) {
         )
 
         ElevatedButton(
-            onClick = { navigateToLogin() },
+            onClick = {
+                navigateToLogin()
+//                navigateToHome()
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -70,5 +73,5 @@ fun Splash(navigateToLogin: () -> Unit) {
 @BothPreviews
 @Composable
 fun PreviewSplash() {
-    Splash({})
+    Splash({}, {})
 }

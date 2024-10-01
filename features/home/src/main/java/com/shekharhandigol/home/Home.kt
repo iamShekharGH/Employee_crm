@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.shekharhandigol.theme.BothPreviews
 import com.shekharhandigol.ui.EmployeeCard
@@ -38,13 +38,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen() {
-    HomeUI()
+fun HomeScreen(goToProfile: () -> Unit) {
+    HomeUI(goToProfile = goToProfile)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeUI() {
+fun HomeUI(goToProfile: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,14 +58,19 @@ fun HomeUI() {
                 navigationIcon = {
                     IconButton(onClick = {}) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Default.Face,
                             contentDescription = ""
                         )
                     }
 
                 },
                 actions = {
-                    Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")
+                    IconButton(onClick = { goToProfile() }) {
+                        Icon(
+                            painter = painterResource(R.drawable.profile_avatar),
+                            contentDescription = ""
+                        )
+                    }
 
                 }
             )
@@ -137,7 +142,7 @@ fun HomeUI() {
                 state = listState,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = MaterialTheme.colorScheme.tertiaryContainer)
+                    .background(color = MaterialTheme.colorScheme.primaryContainer)
             ) {
 
                 items(items.size) { index ->
@@ -164,5 +169,5 @@ fun HomeUI() {
 @BothPreviews
 @Composable
 fun PreviewHomeUI() {
-    HomeUI()
+    HomeUI {}
 }

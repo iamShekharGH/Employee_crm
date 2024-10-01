@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ElevatedButton
@@ -32,13 +34,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shekharhandigol.auth.R
-import com.shekharhandigol.auth.firebaseLogin.SignInState
 import com.shekharhandigol.theme.BothPreviews
 
 @Composable
 fun LoginScreen(
     viewModel: LoginScreenViewModel = viewModel(),
-    onSignInClick: () -> Unit
+    onSignInClick: () -> Unit,
+    goToHome: () -> Unit
 ) {
     val state = viewModel.loginStateFlow.collectAsStateWithLifecycle()
 
@@ -58,7 +60,8 @@ fun LoginScreen(
         login = viewModel.loginToAccount,
         validateUsername = viewModel.validateUsername,
         validatePassword = viewModel.validatePassword,
-        onSignInClick = onSignInClick
+        onSignInClick = onSignInClick,
+        goToHome = goToHome
     )
 }
 
@@ -67,12 +70,14 @@ fun LoginUI(
     login: (String, String) -> Pair<Boolean, Boolean>,
     validateUsername: (String) -> Boolean,
     validatePassword: (String) -> Boolean,
-    onSignInClick: () -> Unit
+    onSignInClick: () -> Unit,
+    goToHome: () -> Unit
 ) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.primaryContainer),
+            .background(color = MaterialTheme.colorScheme.primaryContainer)
+            .verticalScroll(state = rememberScrollState()),
     ) {
         var username by remember { mutableStateOf("") }
         var usernameError by remember { mutableStateOf(false) }
@@ -170,9 +175,10 @@ fun LoginUI(
                     .fillMaxWidth()
                     .padding(top = 20.dp),
                 onClick = {
-                    onSignInClick()
+//                    onSignInClick()
+                    goToHome()
                 }) {
-                Text(text = "Login With Google!")
+                Text(text = "Login With Google!(Go Home)")
             }
 
         }
@@ -187,5 +193,5 @@ fun LoginUI(
 fun PreviewLoginUI() {
     LoginUI({ _, _ ->
         Pair(false, false)
-    }, { false }, { false }, {})
+    }, { false }, { false }, {}, {})
 }

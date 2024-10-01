@@ -34,11 +34,12 @@ fun EmployeeCard() {
             .padding(8.dp)
             .fillMaxWidth(),
         colors = CardColors(
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
             disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer
-        )
+        ),
+        onClick = {}
 
     ) {
         Column(

@@ -47,6 +47,7 @@ android {
 dependencies {
 
     implementation(project(":theme"))
+    implementation(project(":common"))
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
