@@ -29,10 +29,10 @@ interface EmployeeDAO {
     suspend fun insertEmployee(employee: Employee)
 
     @Delete
-    fun delete(employee: Employee)
+    suspend fun delete(employee: Employee)
 
     @Query("DELETE FROM employeesTable WHERE eid = :eid")
-    fun deleteEmployeeWithId(eid: Int)
+    suspend fun deleteEmployeeWithId(eid: Int)
 
     @Query("""
         INSERT INTO employeesTable (name, gender, title, photoUrl, presentToday, salaryCredited)

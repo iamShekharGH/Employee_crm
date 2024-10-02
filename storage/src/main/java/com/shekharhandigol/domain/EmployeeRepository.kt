@@ -30,4 +30,8 @@ class EmployeeRepository @Inject constructor(
     fun getEmployeeOfName(name: String): Flow<List<Employee>> {
         return dao.findByName(name)
     }
+
+    suspend fun insertDummy() {
+        dao.insertRandomInfo()
+    }
 }
