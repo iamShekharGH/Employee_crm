@@ -78,7 +78,7 @@ fun HomeUI(goToProfile: () -> Unit, uiState: State<HomeUiState>) {
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ),
                 title = {
-                    Text("Top app bar")
+                    Text("Employees")
                 },
                 navigationIcon = {
                     IconButton(onClick = {

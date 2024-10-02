@@ -2,16 +2,16 @@ package com.shekharhandigol.common
 
 import kotlinx.serialization.Serializable
 
-//interface Destinations
-sealed class  Destinations {
+sealed class Destinations {
 
     @Serializable
     data object SalarySummaryModule : Destinations()
 
     @Serializable
     data object SalarySummary : Destinations()
+
     @Serializable
-    data object Profile : Destinations()
+    data class Profile(val id: Int = -1) : Destinations()
 
     @Serializable
     data object ProfileModule : Destinations()

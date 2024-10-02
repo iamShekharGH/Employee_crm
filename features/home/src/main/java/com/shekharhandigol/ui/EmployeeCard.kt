@@ -69,7 +69,7 @@ fun EmployeeCard(
 
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data("https://picsum.photos/800/800")
+                            .data(employee.photoUrl)
                             .crossfade(true)
                             .build(),
                         modifier = Modifier

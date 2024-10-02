@@ -46,7 +46,7 @@ fun EmployeeCrmAppNavHost(go: NavHostController, onSignInClick: () -> Unit) {
         )
         homeNavigationGraph(
             navController = go,
-            goToProfile = { go to Destinations.Profile }
+            goToProfile = { go to Destinations.Profile(-1) }
         )
         attendanceSummaryNavGraph(
             navController = go,
