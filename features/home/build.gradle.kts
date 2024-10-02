@@ -48,8 +48,12 @@ dependencies {
 
 
     implementation(project(":theme"))
+    implementation(project(":common"))
+    implementation(project(":storage"))
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.coil.compose)
 
     implementation(libs.androidx.runtime)
     implementation(libs.androidx.runtime.livedata)

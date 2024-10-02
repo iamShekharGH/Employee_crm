@@ -1,51 +1,76 @@
 package com.shekharhandigol.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shekharhandigol.theme.BothPreviews
-import com.shekharhandigol.ui.EmployeeCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen() {
-    HomeUI()
+fun HomeScreen(
+    goToProfile: () -> Unit,
+    viewModel: HomeScreenViewModel
+) {
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    HomeUI(goToProfile = goToProfile, uiState)
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeUI() {
+fun HomeUI(goToProfile: () -> Unit, uiState: State<HomeUiState>) {
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    val state = rememberPullToRefreshState()
+    var isRefreshing by remember { mutableStateOf(false) }
+
     Scaffold(
+        modifier = Modifier
+            .pullToRefresh(
+                onRefresh = {
+                    isRefreshing = true
+                    scope.launch {
+                        isRefreshing = true
+                        snackbarHostState.showSnackbar("Shekhar")
+                        delay(500L)
+                        isRefreshing = false
+                    }
+                },
+                state = state,
+                isRefreshing = isRefreshing
+
+            ),
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             TopAppBar(
                 colors = topAppBarColors(
@@ -56,113 +81,58 @@ fun HomeUI() {
                     Text("Top app bar")
                 },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Shekhar")
+                        }
+                    }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Default.Face,
                             contentDescription = ""
                         )
                     }
 
                 },
                 actions = {
-                    Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")
+                    IconButton(onClick = { goToProfile() }) {
+                        Icon(
+                            painter = painterResource(R.drawable.profile_avatar),
+                            contentDescription = ""
+                        )
+                    }
 
                 }
             )
         },
-        bottomBar = {
-            /*BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentPadding = PaddingValues(0.dp),
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Filled.AccountCircle,
-                            contentDescription = ""
-                        )
-                    }
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = ""
-                        )
-                    }
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Filled.Home,
-                            contentDescription = ""
-                        )
-                    }
-
-                }
-            }*/
-        }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-
-
-            var items by remember { mutableStateOf((1..20).toList()) }
-            val listState = rememberLazyListState()
-            val coroutineScope = rememberCoroutineScope()
-            var isLoading by remember { mutableStateOf(true) }
-
-            LaunchedEffect(listState) {
-                snapshotFlow { listState.layoutInfo.visibleItemsInfo }
-                    .collect { visibleItems ->
-                        val lastVisibleItemIndex = visibleItems.lastOrNull()?.index
-                        if (lastVisibleItemIndex == items.size - 1 && !isLoading) {
-                            coroutineScope.launch {
-                                isLoading = true
-                                // Simulate loading more data
-                                delay(2000)
-                                val nextItems = items.size + 1..items.size + 5
-                                items = items + nextItems.toList()
-                                isLoading = false
-                            }
-                        }
-                    }
+        when (val ui = uiState.value) {
+            HomeUiState.Starting -> {
+                StartingScreen()
             }
 
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = MaterialTheme.colorScheme.tertiaryContainer)
-            ) {
+            HomeUiState.Empty -> {
+                StartingScreen("Employee List is Empty.")
+            }
 
-                items(items.size) { index ->
-                    EmployeeCard()
-                }
-                if (isLoading) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-                }
+            HomeUiState.Error -> {
 
+            }
+
+            is HomeUiState.EmployeeList -> {
+                EmployeeListScreen(innerPadding, ui.list)
             }
         }
+
+
+        PullToRefreshDefaults.Indicator(
+            state = state, isRefreshing = isRefreshing,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 
 @BothPreviews
 @Composable
 fun PreviewHomeUI() {
-    HomeUI()
+    HomeUI({}, rememberUpdatedState(HomeUiState.Empty))
 }

@@ -5,43 +5,60 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.shekharhandigol.AttendanceSummaryDestinations
-import com.shekharhandigol.SalarySummaryDestinations
 import com.shekharhandigol.attendanceSummaryNavGraph
 import com.shekharhandigol.auth.authNavGraph
+import com.shekharhandigol.common.Destinations
 import com.shekharhandigol.homeNavigationGraph
 import com.shekharhandigol.profileNavGraph
 import com.shekharhandigol.salarySummaryNavGraph
-import kotlinx.serialization.Serializable
 
 
-sealed class HomeDestinations {
+fun travelToDestination(
+    navController: NavHostController,
+    destination: Destinations
+): () -> Unit {
 
-    @Serializable
-    data object Home : HomeDestinations()
+    return {
+        navController.navigate(destination)
+    }
+}
 
-    @Serializable
-    data class FriendsList(val name: String) : HomeDestinations()
+infix fun NavHostController.to(d: Destinations) {
+    run { this.navigate(d) }
 }
 
 @Composable
-fun EmployeeCrmAppNavHost(navController: NavHostController) {
+fun EmployeeCrmAppNavHost(go: NavHostController, onSignInClick: () -> Unit) {
 
     NavHost(
-        navController = navController,
-//        startDestination = com.shekharhandigol.auth.Destinations.AuthModule
-//        startDestination = com.shekharhandigol.ProfileDestinations.ProfileModule
-        startDestination = SalarySummaryDestinations.SalarySummaryModule
+        navController = go,
+        startDestination = Destinations.AuthModule
     ) {
 
-        authNavGraph(navController = navController)
-        profileNavGraph(navController = navController)
-        homeNavigationGraph(navController = navController)
-        attendanceSummaryNavGraph(navController = navController)
-        salarySummaryNavGraph(navController = navController)
+        authNavGraph(
+            navController = go,
+            onSignInClick = onSignInClick,
+            goToHome = { go to Destinations.Home },
+        )
+        profileNavGraph(
+            navController = go,
+            goToHome = { go.popBackStack() },
+        )
+        homeNavigationGraph(
+            navController = go,
+            goToProfile = { go to Destinations.Profile }
+        )
+        attendanceSummaryNavGraph(
+            navController = go,
+            goToHome = { go to Destinations.Home }
+        )
+        salarySummaryNavGraph(
+            navController = go,
+            goToHome = { go to Destinations.Home }
+        )
 
 
-        composable<HomeDestinations.Home> {
+        composable<Destinations.Home> {
 
             HomeScreen()
         }

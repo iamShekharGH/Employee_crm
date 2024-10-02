@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
 
     implementation(libs.hilt.android)
+    implementation(project(":common"))
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 

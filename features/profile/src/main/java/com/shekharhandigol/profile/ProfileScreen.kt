@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ElevatedButton
@@ -31,13 +32,13 @@ import androidx.compose.ui.unit.sp
 import com.shekharhandigol.theme.BothPreviews
 
 @Composable
-fun ProfileScreen() {
-    ProfileUI()
+fun ProfileScreen(goToHome: () -> Unit) {
+    ProfileUI(goToHome)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileUI() {
+fun ProfileUI(goToHome: () -> Unit) {
 
     Scaffold(
         topBar = {
@@ -50,7 +51,7 @@ fun ProfileUI() {
                     Text("Top app bar")
                 },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { goToHome() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = ""
@@ -59,7 +60,13 @@ fun ProfileUI() {
 
                 },
                 actions = {
-                    Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")
+                    IconButton(onClick = {}) {
+                        Icon(
+                            imageVector = Icons.Filled.Menu,
+                            contentDescription = ""
+                        )
+                    }
+
 
                 }
             )
@@ -199,5 +206,5 @@ fun ProfileUI() {
 @BothPreviews
 @Composable
 fun PreviewProfileUI() {
-    ProfileUI()
+    ProfileUI { }
 }

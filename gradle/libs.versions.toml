@@ -1,6 +1,7 @@
 [versions]
 agp = "8.6.1"
 #facebookAndroidSdk = "8.x"
+coilCompose = "2.7.0"
 credentials = "1.5.0-alpha05"
 datastorePreferencesCore = "1.1.1"
 facebookAndroidSdk = "17.0.2"
@@ -43,10 +44,12 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationCompose" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomCompiler" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "roomCompiler" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCompiler" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomCompiler" }
 androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "uiTooling" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "uiTooling" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 facebook-android-sdk = { module = "com.facebook.android:facebook-android-sdk", version.ref = "facebookAndroidSdk" }
 # implementation 'com.facebook.android:facebook-login:latest.release'
 

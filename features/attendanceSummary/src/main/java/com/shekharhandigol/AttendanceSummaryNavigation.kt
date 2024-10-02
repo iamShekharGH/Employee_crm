@@ -5,19 +5,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.shekharhandigol.attendancesummary.AttendanceSummaryScreen
-import kotlinx.serialization.Serializable
+import com.shekharhandigol.common.Destinations
 
-sealed class AttendanceSummaryDestinations {
-    @Serializable
-    data object AttendanceSummaryModule : AttendanceSummaryDestinations()
 
-    @Serializable
-    data object AttendanceHome : AttendanceSummaryDestinations()
-}
-
-fun NavGraphBuilder.attendanceSummaryNavGraph(navController: NavController) {
-    navigation<AttendanceSummaryDestinations.AttendanceSummaryModule>(startDestination = AttendanceSummaryDestinations.AttendanceHome) {
-        composable<AttendanceSummaryDestinations.AttendanceHome> {
+fun NavGraphBuilder.attendanceSummaryNavGraph(navController: NavController, goToHome: () -> Unit) {
+    navigation<Destinations.AttendanceSummaryModule>(startDestination = Destinations.AttendanceHome) {
+        composable<Destinations.AttendanceHome> {
             AttendanceSummaryScreen()
         }
     }

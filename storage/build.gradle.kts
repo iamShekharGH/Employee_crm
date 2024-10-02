@@ -47,11 +47,12 @@ android {
 dependencies {
 
 
-
     // Room
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
     androidTestImplementation(libs.androidx.room.testing)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)
