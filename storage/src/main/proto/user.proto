@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_package = "com.shekharhandigol.storage";
+option java_multiple_files = true;
+
+message Gender {
+  enum Value {
+    MALE = 0;
+    FEMALE = 1;
+  }
+}
+message Employee {
+  int32 eid = 1;
+  string name = 2;
+  Gender gender = 3;
+  string title = 4;
+  string photo_url = 5;
+  bool present_today = 6;
+  bool salary_credited = 7;
+}
+
+message AppUserInformation {
+  Employee employee = 1;
+  string email = 2;
+  int32 age = 3;
+  string birthday = 4;
+}
