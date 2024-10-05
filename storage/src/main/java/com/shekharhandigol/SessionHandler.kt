@@ -1,7 +1,12 @@
 package com.shekharhandigol
 
-import androidx.datastore.core.Serializer
-/*
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
+import com.shekharhandigol.storage.AppUserInformation
 
-class SessionHandler : Serializer<AppUserInformation>{
-}*/
+val Context.settingsDataStore: DataStore<AppUserInformation> by dataStore(
+    fileName = "settings.pb",
+    serializer = AppUserInformationSerializer
+)
+
