@@ -12,7 +12,7 @@ val Context.employeeDataStore: DataStore<AppUserInformation> by dataStore(
 )
 
 interface SessionHandler {
-    suspend fun saveSession(appUserInformation: AppUserInformation)
+    suspend fun saveSession(userInformation: com.shekharhandigol.data.models.UserInformation)
     suspend fun getSession(): Flow<AppUserInformation>
     suspend fun clear()
 }

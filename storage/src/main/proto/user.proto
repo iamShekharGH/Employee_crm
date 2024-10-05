@@ -3,13 +3,12 @@ syntax = "proto3";
 option java_package = "com.shekharhandigol.storage";
 option java_multiple_files = true;
 
-message Gender {
-  enum Value {
+
+message Employee {
+  enum Gender {
     MALE = 0;
     FEMALE = 1;
   }
-}
-message Employee {
   int32 eid = 1;
   string name = 2;
   Gender gender = 3;

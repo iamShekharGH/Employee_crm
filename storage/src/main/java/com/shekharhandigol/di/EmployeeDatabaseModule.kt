@@ -4,6 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import com.shekharhandigol.data.EmployeeDAO
 import com.shekharhandigol.data.EmployeeDatabase
+import com.shekharhandigol.data.models.UserInformation
+import com.shekharhandigol.datastore.EmployeeCRMSessionHandler
+import com.shekharhandigol.datastore.SessionHandler
+import com.shekharhandigol.mapper.FromAppToUserInformation
+import com.shekharhandigol.mapper.Mapper
+import com.shekharhandigol.storage.AppUserInformation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,5 +35,19 @@ object EmployeeDatabaseModule {
     ): EmployeeDAO {
         return db.employeeDAO()
     }
+
+    @Provides
+    fun proveideMapper(): Mapper<AppUserInformation, UserInformation> = FromAppToUserInformation()
+
+
+    @Provides
+    fun provedeSessionHandler(
+        @ApplicationContext context: Context,
+        mapper: Mapper<AppUserInformation, UserInformation>
+    ): SessionHandler =
+        EmployeeCRMSessionHandler(
+            context = context,
+            mapper = mapper
+        )
 
 }

@@ -1,27 +1,51 @@
 package com.shekharhandigol.datastore
 
 import android.content.Context
+import com.shekharhandigol.data.models.EmployeeGender
+import com.shekharhandigol.data.models.UserInformation
+import com.shekharhandigol.mapper.Mapper
 import com.shekharhandigol.storage.AppUserInformation
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.shekharhandigol.storage.Employee
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class EmployeeCRMSessionHandler @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val context: Context,
+    private val mapper: Mapper<AppUserInformation, UserInformation>
 ) : SessionHandler {
-    override suspend fun saveSession(appUserInformation: AppUserInformation) {
+    override suspend fun saveSession(userInformation: UserInformation) {
+
         context.employeeDataStore.updateData {
-            it.toBuilder()
-                .setEmployee(appUserInformation.employee)
-                .setBirthday(appUserInformation.birthday)
-                .setAge(appUserInformation.age)
-                .setEmail(appUserInformation.email)
+            it.toBuilder().setEmployee(
+                Employee.newBuilder().apply {
+                    eid = userInformation.eid
+                    name = userInformation.name
+                    title = userInformation.title
+                    photoUrl = userInformation.photoUrl
+                    presentToday = userInformation.presentToday
+                    salaryCredited = userInformation.salaryCredited
+                    gender = when (userInformation.employeeGender) {
+                        EmployeeGender.Male -> Employee.Gender.MALE
+                        EmployeeGender.Female -> Employee.Gender.FEMALE
+                        EmployeeGender.Unrecognized -> Employee.Gender.UNRECOGNIZED
+                    }
+                }
+            )
+                .setBirthday(userInformation.birthday)
+                .setAge(userInformation.age)
+                .setEmail(userInformation.email)
                 .build()
         }
     }
 
-    override suspend fun getSession(): Flow<AppUserInformation> {
+    suspend fun getUserInformation(): Flow<UserInformation> {
+        return getSession().map {
+            mapper.map(it)
+        }
+    }
 
+    override suspend fun getSession(): Flow<AppUserInformation> {
         return context.employeeDataStore.data
     }
 

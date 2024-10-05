@@ -155,17 +155,8 @@ fun LoginUI(
                     .padding(top = 20.dp),
                 onClick = {
                     val validationResult = login(username, password)
-                    if (validationResult.first) {
-                        usernameError = true
-
-                    }
-                    if (validationResult.second) {
-                        passwordError = true
-                    }
-                    if (!(usernameError && passwordError)) {
-
-                    }
-
+                    usernameError = validationResult.first
+                    passwordError = validationResult.second
                 }) {
                 Text(text = stringResource(R.string.login))
             }
