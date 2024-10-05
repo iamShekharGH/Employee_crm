@@ -1,4 +1,4 @@
-package com.shekharhandigol
+package com.shekharhandigol.datastore
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
