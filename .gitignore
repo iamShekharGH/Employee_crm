@@ -1,3 +1,24 @@
+# Build output files
+build/
+bin/
+*.class
+*.jar
+*.war
+*.ear
+
+# Generated files
+build/generated/
+build/reports/
+build/tmp/
+*.apk
+*.so
+
+# IDE-specific files
+.idea/
+.gradle/
+gradlew*
+gradle/wrapper/gradle-wrapper.jar
+
 *.iml
 .gradle
 /local.properties
@@ -24,3 +45,6 @@ features/auth/google-services.json
 /app/google-services.json
 /.idea/
 /.kotlin/
+/*.log
+
+
