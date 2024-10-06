@@ -1,18 +1,24 @@
 package com.shekharhandigol.auth.login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.shekharhandigol.auth.firebaseLogin.SignInResult
 import com.shekharhandigol.auth.firebaseLogin.SignInState
 import com.shekharhandigol.auth.login.validation.ValidatorFactory
+import com.shekharhandigol.data.models.EmployeeGender
+import com.shekharhandigol.data.models.UserInformation
+import com.shekharhandigol.datastore.SessionHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
-    private val validatorFactory: ValidatorFactory
+    private val validatorFactory: ValidatorFactory,
+    private val dataStore: SessionHandler
 ) : ViewModel() {
 
 
@@ -38,7 +44,34 @@ class LoginScreenViewModel @Inject constructor(
 
 
     val loginToAccount: (String, String) -> Pair<Boolean, Boolean> = { username, password ->
-        validateText(username, password)
+        val validationResult = validateText(username, password)
+
+        if (validationResult.first && validationResult.second) {
+            saveUserInformation(
+                UserInformation(
+                    eid = 1,
+                    name = "Shekhar Handigol",
+                    title = "Software Engineer",
+                    age = 25,
+                    birthday = "1997-01-01",
+                    presentToday = true,
+                    salaryCredited = false,
+                    email = "joseph.mckenna@examplepetstore.com",
+                    employeeGender = EmployeeGender.Male,
+                    photoUrl = ""
+                )
+
+            )
+        }
+
+        validationResult
+
+    }
+
+    private fun saveUserInformation(appUserInformation: UserInformation) {
+        viewModelScope.launch {
+            dataStore.saveSession(appUserInformation)
+        }
     }
 
     val validateUsername: (String) -> Boolean = { username ->

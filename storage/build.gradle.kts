@@ -1,12 +1,12 @@
+import com.google.protobuf.gradle.id
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    id("androidx.navigation.safeargs.kotlin")
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.protobuf)
     id("kotlin-kapt")
-
-//    id("androidx.hilt.navigation.compose")
 }
 
 android {
@@ -55,8 +55,10 @@ dependencies {
     implementation(libs.androidx.room.paging)
 
     // DataStore
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.datastore.preferences.core)
+    implementation(libs.datastore)
+    implementation(libs.protobuf.javalite)
+
+
 
     // Hilt
     implementation(libs.hilt.android)
@@ -71,4 +73,16 @@ dependencies {
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.19.4"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.plugins.create("java") {
+                option("lite")
+            }
+        }
+    }
 }

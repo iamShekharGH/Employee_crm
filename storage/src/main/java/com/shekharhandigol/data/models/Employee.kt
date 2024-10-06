@@ -11,7 +11,7 @@ data class Employee(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "gender") val gender: Gender,
     @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "photoUrl") val photoUrl: String = "https://picsum.photos/800/800",
+    @ColumnInfo(name = "photoUrl") val photoUrl: String = "https://picsum.photos/400/400",
     @ColumnInfo(name = "presentToday") val presentToday: Boolean,
     @ColumnInfo(name = "salaryCredited") val salaryCredited: Boolean,
 )
