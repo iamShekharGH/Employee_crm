@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(
+internal class HomeScreenViewModel @Inject constructor(
     private val repo: EmployeeRepository
 ) : ViewModel() {
 

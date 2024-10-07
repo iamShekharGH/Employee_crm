@@ -37,11 +37,11 @@ object EmployeeDatabaseModule {
     }
 
     @Provides
-    fun proveideMapper(): Mapper<AppUserInformation, UserInformation> = FromAppToUserInformation()
+    fun provideMapper(): Mapper<AppUserInformation, UserInformation> = FromAppToUserInformation()
 
 
     @Provides
-    fun provedeSessionHandler(
+    fun provideSessionHandler(
         @ApplicationContext context: Context,
         mapper: Mapper<AppUserInformation, UserInformation>
     ): SessionHandler =

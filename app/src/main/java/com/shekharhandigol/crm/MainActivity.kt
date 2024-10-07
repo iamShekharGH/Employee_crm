@@ -6,6 +6,8 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.rememberDrawerState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -13,6 +15,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
+import com.shekharhandigol.EmployeeNavDrawer
+import com.shekharhandigol.common.Destinations
 import com.shekharhandigol.theme.EmployeeCRMTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,10 +31,28 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
 
-        setContent {
-            EmployeeCRMTheme {
 
-                EmployeeCrmAppNavHost(rememberNavController()) { signIn(createSignInRequest()) }
+        setContent {
+
+            EmployeeCRMTheme {
+                val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+                val openDrawer: () -> suspend () -> Unit = { suspend { drawerState.open() } }
+                val navController = rememberNavController()
+                EmployeeNavDrawer(
+                    drawerState = drawerState,
+                    currentRoute = "",
+                    navigateToAttendance = {
+                        navController.navigate(Destinations.AttendanceSummaryModule)
+                    },
+                    navigateToSalary = {
+                        navController.navigate(Destinations.SalarySummaryModule)
+                    },
+                    closeDrawer = {}) {
+                    EmployeeCrmAppNavHost(navController,openDrawer) { signIn(createSignInRequest()) }
+                }
+
+
             }
         }
     }
