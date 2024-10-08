@@ -46,14 +46,17 @@ android {
 
 dependencies {
     implementation(project(":theme"))
+    implementation(project(":storage"))
+    implementation(project(":common"))
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.coil.compose)
 
     implementation(libs.androidx.runtime)
     implementation(libs.androidx.runtime.livedata)
 
     implementation(libs.hilt.android)
-    implementation(project(":common"))
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 

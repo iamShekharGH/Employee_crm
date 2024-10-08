@@ -1,44 +1,86 @@
 package com.shekharhandigol.auth.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.shekharhandigol.auth.firebaseLogin.SignInResult
-import com.shekharhandigol.auth.firebaseLogin.SignInState
+import androidx.lifecycle.viewModelScope
+import com.shekharhandigol.auth.LoginUserUiState
 import com.shekharhandigol.auth.login.validation.ValidatorFactory
+import com.shekharhandigol.data.models.EmployeeGender
+import com.shekharhandigol.data.models.UserInformation
+import com.shekharhandigol.data.models.isPartiallyValid
+import com.shekharhandigol.data.models.isValid
+import com.shekharhandigol.datastore.SessionHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
-    private val validatorFactory: ValidatorFactory
+    private val validatorFactory: ValidatorFactory,
+    private val dataStore: SessionHandler
 ) : ViewModel() {
 
+    init {
+        checkUserSignInState()
+    }
 
-    private val _loginStateFlow = MutableStateFlow(SignInState())
+    private val _loginStateFlow = MutableStateFlow<LoginUserUiState>(LoginUserUiState.FirstBoot)
     val loginStateFlow = _loginStateFlow.asStateFlow()
 
-    fun signInResult(result: SignInResult) {
-        _loginStateFlow.update {
-            it.copy(
-                isSignedIn = result.data != null,
-                errorMessage = result.errorMsg
-            )
+    private fun resetApp(){
+        viewModelScope.launch {
+            dataStore.clear()
         }
     }
 
-    fun resetUser() {
-        _loginStateFlow.update { SignInState() }
-    }
-
-    val onSignInClick: () -> Unit = {
-        resetUser()
-    }
-
-
     val loginToAccount: (String, String) -> Pair<Boolean, Boolean> = { username, password ->
-        validateText(username, password)
+        val validationResult = validateText(username, password)
+
+        if (!validationResult.first && !validationResult.second) {
+//        if (true) {
+            saveUserInformation(
+                UserInformation(
+                    eid = 1,
+                    name = "Shekhar Handigol",
+                    title = "Software Engineer",
+                    age = 25,
+                    birthday = "1997-01-01",
+                    presentToday = true,
+                    salaryCredited = false,
+                    email = "joseph.mckenna@examplepetstore.com",
+                    employeeGender = EmployeeGender.Male,
+                    photoUrl = ""
+                )
+
+            )
+        }
+
+        validationResult
+
+    }
+
+    private fun saveUserInformation(appUserInformation: UserInformation) {
+        viewModelScope.launch {
+            dataStore.saveSession(appUserInformation)
+        }
+    }
+
+    private fun checkUserSignInState() {
+        viewModelScope.launch {
+            val userInformation = dataStore.getUserInformation()
+            userInformation.collectLatest { info ->
+
+                _loginStateFlow.value = when {
+                    info.isValid() -> LoginUserUiState.UserIsLoggedIn
+                    info.isPartiallyValid() -> LoginUserUiState.UserIsLoggedOut
+                    else -> LoginUserUiState.UserIsNew
+                }
+                Log.d("LoginScreenViewModel", "checkUserSignInState: $info")
+            }
+        }
     }
 
     val validateUsername: (String) -> Boolean = { username ->
@@ -50,10 +92,6 @@ class LoginScreenViewModel @Inject constructor(
 
     private fun validateText(username: String, password: String): Pair<Boolean, Boolean> {
         return Pair(validateUsername(username), validatePassword(password))
-    }
-
-    fun loginToAccount(s: String, s1: String) {
-
     }
 
 }

@@ -2,7 +2,7 @@ package com.shekharhandigol.home
 
 import com.shekharhandigol.data.models.Employee
 
-sealed class HomeUiState {
+internal sealed class HomeUiState {
 
     data object Starting : HomeUiState()
     data object Empty : HomeUiState()

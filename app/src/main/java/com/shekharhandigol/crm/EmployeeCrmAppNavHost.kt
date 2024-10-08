@@ -28,7 +28,11 @@ infix fun NavHostController.to(d: Destinations) {
 }
 
 @Composable
-fun EmployeeCrmAppNavHost(go: NavHostController, onSignInClick: () -> Unit) {
+fun EmployeeCrmAppNavHost(
+    go: NavHostController,
+    openDrawer: () -> suspend () -> Unit,
+    onSignInClick: () -> Unit
+) {
 
     NavHost(
         navController = go,
@@ -46,7 +50,8 @@ fun EmployeeCrmAppNavHost(go: NavHostController, onSignInClick: () -> Unit) {
         )
         homeNavigationGraph(
             navController = go,
-            goToProfile = { go to Destinations.Profile }
+            goToProfile = { go to Destinations.Profile(-1) },
+            openDrawer = openDrawer
         )
         attendanceSummaryNavGraph(
             navController = go,

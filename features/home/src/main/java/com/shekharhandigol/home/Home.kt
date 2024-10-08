@@ -1,9 +1,8 @@
 package com.shekharhandigol.home
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,18 +32,23 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(
+internal fun HomeScreen(
     goToProfile: () -> Unit,
+    openDrawer: () -> suspend () -> Unit,
     viewModel: HomeScreenViewModel
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-    HomeUI(goToProfile = goToProfile, uiState)
+    HomeUI(goToProfile = goToProfile, uiState = uiState, openDrawer = openDrawer)
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeUI(goToProfile: () -> Unit, uiState: State<HomeUiState>) {
+private fun HomeUI(
+    goToProfile: () -> Unit,
+    uiState: State<HomeUiState>,
+    openDrawer: () -> suspend () -> Unit
+) {
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -78,16 +82,18 @@ fun HomeUI(goToProfile: () -> Unit, uiState: State<HomeUiState>) {
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ),
                 title = {
-                    Text("Top app bar")
+                    Text("Employees")
                 },
                 navigationIcon = {
                     IconButton(onClick = {
                         scope.launch {
-                            snackbarHostState.showSnackbar("Shekhar")
+                            openDrawer().invoke()
+                            snackbarHostState.showSnackbar("Drawer Opened!")
                         }
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Face,
+//                            imageVector = Icons.Default.Face,
+                            imageVector = Icons.Default.Menu,
                             contentDescription = ""
                         )
                     }
@@ -134,5 +140,5 @@ fun HomeUI(goToProfile: () -> Unit, uiState: State<HomeUiState>) {
 @BothPreviews
 @Composable
 fun PreviewHomeUI() {
-    HomeUI({}, rememberUpdatedState(HomeUiState.Empty))
+    HomeUI({}, rememberUpdatedState(HomeUiState.Empty), { {  } })
 }
