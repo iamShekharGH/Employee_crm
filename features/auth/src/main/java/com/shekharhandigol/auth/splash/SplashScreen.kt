@@ -18,12 +18,33 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.shekharhandigol.auth.LoginUserUiState
 import com.shekharhandigol.auth.R
+import com.shekharhandigol.auth.login.LoginScreenViewModel
 import com.shekharhandigol.theme.BothPreviews
 
 @Composable
-fun SplashScreen(navigateToLogin: () -> Unit, navigateToHome: () -> Unit) {
-    Splash(navigateToLogin, navigateToHome)
+fun SplashScreen(
+    navigateToLogin: () -> Unit,
+    navigateToHome: () -> Unit,
+    viewModel: LoginScreenViewModel
+) {
+    val state = viewModel.loginStateFlow.collectAsStateWithLifecycle()
+    when (state.value) {
+        LoginUserUiState.UserIsNew,
+        LoginUserUiState.FirstBoot -> {
+            Splash(navigateToLogin, navigateToHome)
+        }
+
+        LoginUserUiState.UserIsLoggedIn -> {
+            navigateToHome()
+        }
+
+        LoginUserUiState.UserIsLoggedOut -> {
+            navigateToLogin()
+        }
+    }
 }
 
 @Composable

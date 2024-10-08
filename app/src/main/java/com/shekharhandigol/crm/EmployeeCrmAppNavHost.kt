@@ -36,7 +36,7 @@ fun EmployeeCrmAppNavHost(
 
     NavHost(
         navController = go,
-        startDestination = Destinations.HomeModule
+        startDestination = Destinations.AuthModule
     ) {
 
         authNavGraph(

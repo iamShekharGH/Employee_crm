@@ -30,3 +30,30 @@ class FromAppToUserInformation @Inject constructor() : Mapper<AppUserInformation
         )
     }
 }
+class FromUserInformationToApp @Inject constructor() : Mapper<UserInformation, AppUserInformation> {
+
+    override fun map(from: UserInformation): AppUserInformation {
+        return AppUserInformation.getDefaultInstance().toBuilder().apply {
+            employee = Employee.getDefaultInstance().toBuilder().apply {
+                eid = from.eid
+                name = from.name
+                title = from.title
+                photoUrl = from.photoUrl
+                presentToday = from.presentToday
+                salaryCredited = from.salaryCredited
+                gender = when (from.employeeGender) {
+                    EmployeeGender.Male -> Employee.Gender.MALE
+                    EmployeeGender.Female -> Employee.Gender.FEMALE
+                    EmployeeGender.Unrecognized -> Employee.Gender.UNRECOGNIZED
+                }
+                email = from.email
+                birthday = from.birthday
+                age = from.age
+
+            }.build()
+            age = from.age
+            birthday = from.birthday
+            email = from.email
+        }.build()
+    }
+}

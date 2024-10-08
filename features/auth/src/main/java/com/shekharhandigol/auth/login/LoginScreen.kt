@@ -32,27 +32,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shekharhandigol.auth.R
 import com.shekharhandigol.theme.BothPreviews
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginScreenViewModel = viewModel(),
     onSignInClick: () -> Unit,
-    goToHome: () -> Unit
+    goToHome: () -> Unit,
+    viewModel: LoginScreenViewModel
 ) {
     val state = viewModel.loginStateFlow.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-    LaunchedEffect(key1 = state.value.errorMessage) {
-        state.value.errorMessage?.let { error ->
-            Toast.makeText(
-                context,
-                error,
-                Toast.LENGTH_LONG
-            ).show()
-        }
+    LaunchedEffect(key1 = state.value) {
+        Toast.makeText(
+            context,
+            state.value.toString(),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
 

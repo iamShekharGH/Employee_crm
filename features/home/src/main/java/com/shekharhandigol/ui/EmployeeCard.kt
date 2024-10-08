@@ -77,7 +77,7 @@ fun EmployeeCard(
                             .size(150.dp)
                             .border(
                                 width = 2.dp,
-                                color = MaterialTheme.colorScheme.tertiary,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer,
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clip(RoundedCornerShape(8.dp)),

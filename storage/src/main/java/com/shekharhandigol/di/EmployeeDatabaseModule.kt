@@ -8,6 +8,7 @@ import com.shekharhandigol.data.models.UserInformation
 import com.shekharhandigol.datastore.EmployeeCRMSessionHandler
 import com.shekharhandigol.datastore.SessionHandler
 import com.shekharhandigol.mapper.FromAppToUserInformation
+import com.shekharhandigol.mapper.FromUserInformationToApp
 import com.shekharhandigol.mapper.Mapper
 import com.shekharhandigol.storage.AppUserInformation
 import dagger.Module
@@ -37,17 +38,24 @@ object EmployeeDatabaseModule {
     }
 
     @Provides
-    fun provideMapper(): Mapper<AppUserInformation, UserInformation> = FromAppToUserInformation()
+    fun provideMapperAtoU(): Mapper<AppUserInformation, UserInformation> =
+        FromAppToUserInformation()
+
+    @Provides
+    fun provideMapperUtoA(): Mapper<UserInformation, AppUserInformation> =
+        FromUserInformationToApp()
 
 
     @Provides
     fun provideSessionHandler(
         @ApplicationContext context: Context,
-        mapper: Mapper<AppUserInformation, UserInformation>
+        mapper: Mapper<AppUserInformation, UserInformation>,
+        mapperUA: Mapper<UserInformation, AppUserInformation>,
     ): SessionHandler =
         EmployeeCRMSessionHandler(
             context = context,
-            mapper = mapper
+            mapper = mapper,
+            mapperUA = mapperUA
         )
 
 }

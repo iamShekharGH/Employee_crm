@@ -12,10 +12,16 @@ import javax.inject.Inject
 
 class EmployeeCRMSessionHandler @Inject constructor(
     private val context: Context,
-    private val mapper: Mapper<AppUserInformation, UserInformation>
+    private val mapper: Mapper<AppUserInformation, UserInformation>,
+    private val mapperUA: Mapper<UserInformation, AppUserInformation>
 ) : SessionHandler {
     override suspend fun saveSession(userInformation: UserInformation) {
 
+        context.employeeDataStore.updateData {
+            mapperUA.map(userInformation)
+        }
+
+        /* Am keeping this if there is a bug tomm.
         context.employeeDataStore.updateData {
             it.toBuilder().setEmployee(
                 Employee.newBuilder().apply {
@@ -36,10 +42,10 @@ class EmployeeCRMSessionHandler @Inject constructor(
                 .setAge(userInformation.age)
                 .setEmail(userInformation.email)
                 .build()
-        }
+        }*/
     }
 
-    suspend fun getUserInformation(): Flow<UserInformation> {
+    override suspend fun getUserInformation(): Flow<UserInformation> {
         return getSession().map {
             mapper.map(it)
         }

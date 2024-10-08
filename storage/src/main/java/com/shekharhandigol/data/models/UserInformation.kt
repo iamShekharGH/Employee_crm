@@ -13,4 +13,12 @@ data class UserInformation(
     val salaryCredited: Boolean
 )
 
+fun UserInformation.isValid(): Boolean {
+    return name.isNotEmpty() && title.isNotEmpty() && email.isNotEmpty() && age > 0
+}
+fun UserInformation.isPartiallyValid(): Boolean {
+    return name.isNotEmpty() || title.isNotEmpty() || email.isNotEmpty() || age > 0
+}
+
+
 enum class EmployeeGender { Male, Female, Unrecognized }
