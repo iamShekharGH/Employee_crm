@@ -8,6 +8,7 @@ data class UserInformation(
     val age: Int,
     val birthday: String,
     val photoUrl: String,
+    val salary: Long,
     val employeeGender: EmployeeGender,
     val presentToday: Boolean,
     val salaryCredited: Boolean

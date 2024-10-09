@@ -62,7 +62,10 @@ fun EmployeeCrmAppNavHost(
         )
         salarySummaryNavGraph(
             navController = go,
-            goToHome = { go to Destinations.Home }
+            goToHome = {
+                go.popBackStack(go.graph.id, inclusive = true)
+                go to Destinations.Home
+            }
         )
 
 

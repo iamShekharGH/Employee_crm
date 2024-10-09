@@ -20,26 +20,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.shekharhandigol.SalaryBreakdown
 import com.shekharhandigol.theme.BothPreviews
 
 @Composable
-fun SalarySummaryScreen() {
-    SalarySummaryUI()
+fun SalarySummaryScreen(
+    goToHome: () -> Unit,
+    viewModel: SalarySummaryScreenViewModel = hiltViewModel()
+) {
+    val uiState = viewModel.salarySummaryStateFlow.collectAsStateWithLifecycle()
+    when (val ui = uiState.value) {
+        SalaryScreenUIState.FirstBoot -> {
+            FirstBoot(goToHome)
+        }
+
+        SalaryScreenUIState.NoInformation -> {
+            NoInformation(goToHome)
+        }
+
+        is SalaryScreenUIState.SalarySummary -> {
+            SalarySummaryUI(ui.salaryBreakdown, goToHome)
+        }
+    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SalarySummaryUI() {
+fun SalarySummaryUI(salaryBreakdown: SalaryBreakdown, goToHome: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         topBar = {
             TopAppBar(title = { Text(text = "Salary Summary") },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { goToHome() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = ""
+                            contentDescription = "Go Back"
                         )
                     }
                 })
@@ -54,6 +74,7 @@ fun SalarySummaryUI() {
             ElevatedCard(
                 modifier = Modifier
                     .padding(8.dp)
+                    .padding(top = 8.dp)
                     .fillMaxWidth(),
 
                 ) {
@@ -62,8 +83,15 @@ fun SalarySummaryUI() {
                         .padding(8.dp)
                         .fillMaxWidth()
                 ) {
-                    RowInformation(heading = "Net Salary :", body = "₹48,133", larger = true)
-                    RowInformation(heading = "Earnings - Deductions", body = "₹66,667-₹18,534")
+                    RowInformation(
+                        heading = "Net Salary :",
+                        body = "₹${salaryBreakdown.netSalary}",
+                        larger = true
+                    )
+                    RowInformation(
+                        heading = "Earnings - Deductions",
+                        body = "₹${salaryBreakdown.totalEarnings}-₹${salaryBreakdown.totalDeductions}"
+                    )
                 }
             }
             ElevatedCard(
@@ -83,13 +111,16 @@ fun SalarySummaryUI() {
                         fontSize = 21.sp, textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleLarge
                     )
-                    RowInformation("Basic Salary", "₹ 40,000")
-                    RowInformation("HRA (House Rent Allowance)", "₹ 15,000")
-                    RowInformation("Conveyance Allowance", "₹ 5,000")
-                    RowInformation("Medical Allowance", "₹ 3,000")
-                    RowInformation("Other Allowances", "₹ 3,667")
+                    RowInformation("Basic Salary", "₹ ${salaryBreakdown.basicSalary}")
+                    RowInformation("HRA (House Rent Allowance)", "₹ ${salaryBreakdown.hra}")
+                    RowInformation(
+                        "Conveyance Allowance",
+                        "₹ ${salaryBreakdown.conveyanceAllowance}"
+                    )
+                    RowInformation("Medical Allowance", "₹ ${salaryBreakdown.medicalAllowance}")
+                    RowInformation("Other Allowances", "₹ ${salaryBreakdown.otherAllowances}")
                     HorizontalDivider()
-                    RowInformation("Total Earnings", "₹ 66,667")
+                    RowInformation("Total Earnings", "₹ ${salaryBreakdown.totalEarnings}")
 
                 }
             }
@@ -110,12 +141,12 @@ fun SalarySummaryUI() {
                         style = MaterialTheme.typography.titleLarge
                     )
 
-                    RowInformation("Income Tax", "₹ 10,000")
-                    RowInformation("Provident Fund (PF)", "₹ 6,667")
-                    RowInformation("Professional Tax", "₹ 200")
-                    RowInformation("Other Deductions", "₹ 1,000")
+                    RowInformation("Income Tax", "₹ ${salaryBreakdown.incomeTax}")
+                    RowInformation("Provident Fund (PF)", "₹ ${salaryBreakdown.providentFund}")
+                    RowInformation("Professional Tax", "₹ ${salaryBreakdown.professionalTax}")
+                    RowInformation("Other Deductions", "₹ ${salaryBreakdown.otherDeductions}")
                     HorizontalDivider()
-                    RowInformation("Total Deductions", "₹ 18,534")
+                    RowInformation("Total Deductions", "₹ ${salaryBreakdown.totalDeductions}")
 
                 }
             }
@@ -126,5 +157,21 @@ fun SalarySummaryUI() {
 @BothPreviews
 @Composable
 fun PreviewSalarySummaryUI() {
-    SalarySummaryUI()
+    SalarySummaryUI(
+        SalaryBreakdown(
+            basicSalary = 50000.0,
+            hra = 15000.0,
+            conveyanceAllowance = 1000.0,
+            medicalAllowance = 500.0,
+            otherAllowances = 0.0,
+            totalEarnings = 0.0,
+            incomeTax = 0.0,
+            providentFund = 0.0,
+            professionalTax = 250.0,
+            otherDeductions = 0.0,
+            totalDeductions = 0.0,
+            netSalary = 0.0
+        ),
+        goToHome = {}
+    )
 }

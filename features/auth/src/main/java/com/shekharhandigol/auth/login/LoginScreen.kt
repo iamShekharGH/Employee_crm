@@ -154,6 +154,9 @@ fun LoginUI(
                     val validationResult = login(username, password)
                     usernameError = validationResult.first
                     passwordError = validationResult.second
+                    if (!usernameError && !passwordError) {
+                        goToHome()
+                    }
                 }) {
                 Text(text = stringResource(R.string.login))
             }
@@ -163,8 +166,8 @@ fun LoginUI(
                     .fillMaxWidth()
                     .padding(top = 20.dp),
                 onClick = {
-//                    onSignInClick()
-                    goToHome()
+                    onSignInClick()
+//                    goToHome()
                 }) {
                 Text(text = "Login With Google!(Go Home)")
             }
