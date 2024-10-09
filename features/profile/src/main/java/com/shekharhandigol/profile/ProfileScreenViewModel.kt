@@ -38,6 +38,12 @@ class ProfileScreenViewModel @Inject constructor(
         }
     }
 
+    fun clearUserInformation() {
+        viewModelScope.launch {
+            dataStore.clear()
+        }
+    }
+
 
 }
 

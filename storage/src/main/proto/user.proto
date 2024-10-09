@@ -23,4 +23,5 @@ message AppUserInformation {
   string email = 2;
   int32 age = 3;
   string birthday = 4;
+  int64 salary = 5;
 }

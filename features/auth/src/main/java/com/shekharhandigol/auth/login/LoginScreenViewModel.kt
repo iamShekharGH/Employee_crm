@@ -23,12 +23,13 @@ class LoginScreenViewModel @Inject constructor(
     private val dataStore: SessionHandler
 ) : ViewModel() {
 
-    init {
-        checkUserSignInState()
-    }
 
     private val _loginStateFlow = MutableStateFlow<LoginUserUiState>(LoginUserUiState.FirstBoot)
     val loginStateFlow = _loginStateFlow.asStateFlow()
+
+    init {
+        checkUserSignInState()
+    }
 
     private fun resetApp(){
         viewModelScope.launch {
@@ -40,26 +41,29 @@ class LoginScreenViewModel @Inject constructor(
         val validationResult = validateText(username, password)
 
         if (!validationResult.first && !validationResult.second) {
-//        if (true) {
-            saveUserInformation(
-                UserInformation(
-                    eid = 1,
-                    name = "Shekhar Handigol",
-                    title = "Software Engineer",
-                    age = 25,
-                    birthday = "1997-01-01",
-                    presentToday = true,
-                    salaryCredited = false,
-                    email = "joseph.mckenna@examplepetstore.com",
-                    employeeGender = EmployeeGender.Male,
-                    photoUrl = ""
-                )
-
-            )
+            makeLoginRequestAndSaveInfo()
         }
 
         validationResult
+    }
 
+    private fun makeLoginRequestAndSaveInfo() {
+
+        saveUserInformation(
+            UserInformation(
+                eid = 1,
+                name = "Shekhar Handigol",
+                title = "Software Engineer",
+                age = 25,
+                birthday = "1997-01-01",
+                presentToday = true,
+                salaryCredited = false,
+                email = "joseph.mckenna@examplepetstore.com",
+                employeeGender = EmployeeGender.Male,
+                photoUrl = "",
+                salary = 2100000
+            )
+        )
     }
 
     private fun saveUserInformation(appUserInformation: UserInformation) {

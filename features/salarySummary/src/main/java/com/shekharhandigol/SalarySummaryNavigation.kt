@@ -12,7 +12,7 @@ fun NavGraphBuilder.salarySummaryNavGraph(navController: NavController, goToHome
 
     navigation<Destinations.SalarySummaryModule>(startDestination = Destinations.SalarySummary) {
         composable<Destinations.SalarySummary> {
-            SalarySummaryScreen()
+            SalarySummaryScreen(goToHome)
         }
     }
 }

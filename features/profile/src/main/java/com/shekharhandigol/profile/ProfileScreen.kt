@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.ElevatedButton
@@ -47,13 +48,14 @@ import kotlinx.coroutines.launch
 fun ProfileScreen(goToHome: () -> Unit) {
     val viewModel: ProfileScreenViewModel = hiltViewModel()
     val state = viewModel.profileUIState.collectAsStateWithLifecycle()
+    val logout = { viewModel.clearUserInformation() }
     when (val ui = state.value) {
         ProfileUiState.NoInfoAvailable -> {
             EmptyProfileScreen()
         }
 
         is ProfileUiState.ThisIsProfileInfo -> {
-            ProfileUI(goToHome, ui.userInformation)
+            ProfileUI(goToHome, logout, ui.userInformation)
         }
     }
 }
@@ -81,7 +83,7 @@ fun EmptyProfileScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileUI(goToHome: () -> Unit, userInformation: UserInformation) {
+fun ProfileUI(goToHome: () -> Unit, logout: () -> Unit, userInformation: UserInformation) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -118,6 +120,19 @@ fun ProfileUI(goToHome: () -> Unit, userInformation: UserInformation) {
                             contentDescription = "Check"
                         )
                     }
+                    IconButton(onClick = {
+                        scope.launch {
+                            logout()
+                            snackbarHostState.showSnackbar("Nope! Not there")
+                            goToHome()
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Logout"
+                        )
+                    }
+
                 }
             )
         },
@@ -333,7 +348,7 @@ fun ProfileUI(goToHome: () -> Unit, userInformation: UserInformation) {
 @Composable
 fun PreviewProfileUI() {
     ProfileUI(
-        { }, UserInformation(
+        { }, {}, UserInformation(
             eid = 1,
             name = "Shekhar Handigol",
             title = "Software Engineer",
@@ -343,7 +358,8 @@ fun PreviewProfileUI() {
             salaryCredited = false,
             email = "william.strong@my-own-personal-domain.com",
             employeeGender = EmployeeGender.Male,
-            photoUrl = ""
+            photoUrl = "",
+            salary = 50000000
         )
     )
 }

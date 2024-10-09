@@ -1,4 +1,4 @@
-package com.shekharhandigol.attendancesummary
+package com.shekharhandigol.attendancesummary.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,16 +17,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.shekharhandigol.data.models.EmployeeHolidays
 import com.shekharhandigol.theme.BothPreviews
 
 @Composable
-fun AttendanceDaysUI() {
+fun AttendanceDaysUI(employeeHolidays: EmployeeHolidays) {
     Column(
         modifier = Modifier
             .padding(8.dp)
     ) {
         Text(
-            text = "Fri, 27th Sept",
+            text = employeeHolidays.holidayDate,
             style = MaterialTheme.typography.titleSmall
         )
 
@@ -39,7 +40,7 @@ fun AttendanceDaysUI() {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-                text = "Sick leave",
+                text = employeeHolidays.holidayType,
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center
             )
@@ -59,7 +60,7 @@ fun AttendanceDaysUI() {
                     .weight(2f)
                     .padding(bottom = 4.dp),
                 style = MaterialTheme.typography.labelLarge,
-                text = "Appointments for check-ups, vaccinations, or other preventive medical procedures.",
+                text = employeeHolidays.holidayReason,
             )
         }
         HorizontalDivider(
@@ -72,5 +73,13 @@ fun AttendanceDaysUI() {
 @BothPreviews
 @Composable
 fun PreviewAttendanceDaysUI() {
-    AttendanceDaysUI()
+    AttendanceDaysUI(
+        EmployeeHolidays(
+            holidayDate = "2023-09-01",
+            holidayName = "Independence Day",
+            holidayType = "Public Holiday",
+            holidayReason = "Appointments for check-ups, vaccinations, or other preventive medical procedures.",
+            isHolidayTaken = true
+        )
+    )
 }

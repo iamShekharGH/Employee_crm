@@ -11,7 +11,7 @@ import com.shekharhandigol.common.Destinations
 fun NavGraphBuilder.attendanceSummaryNavGraph(navController: NavController, goToHome: () -> Unit) {
     navigation<Destinations.AttendanceSummaryModule>(startDestination = Destinations.AttendanceHome) {
         composable<Destinations.AttendanceHome> {
-            AttendanceSummaryScreen()
+            AttendanceSummaryScreen(goToHome)
         }
     }
 }
