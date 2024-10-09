@@ -25,12 +25,10 @@ private const val RC_SIGN_IN: Int = 7777
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
-
 
         setContent {
 
@@ -41,7 +39,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 EmployeeNavDrawer(
                     drawerState = drawerState,
-                    currentRoute = "",
+                    navController = navController,
                     navigateToAttendance = {
                         navController.navigate(Destinations.AttendanceSummaryModule)
                     },

@@ -9,7 +9,7 @@ import com.shekharhandigol.profile.ProfileScreen
 
 
 fun NavGraphBuilder.profileNavGraph(navController: NavController, goToHome: () -> Unit) {
-    navigation<Destinations.ProfileModule>(startDestination = Destinations.Profile(-1)) {
+    navigation<Destinations.ProfileModule>(startDestination = Destinations.Profile) {
         composable<Destinations.Profile> {
             ProfileScreen(goToHome)
         }
