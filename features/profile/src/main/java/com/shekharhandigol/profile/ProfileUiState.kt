@@ -1,6 +1,6 @@
 package com.shekharhandigol.profile
 
-import com.shekharhandigol.data.models.UserInformation
+import com.shekharhandigol.models.UserInformation
 
 sealed class ProfileUiState {
     data object NoInfoAvailable : ProfileUiState()

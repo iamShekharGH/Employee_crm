@@ -171,12 +171,8 @@ fun LoginUI(
                 }) {
                 Text(text = "Login With Google!(Go Home)")
             }
-
         }
-
-
     }
-
 }
 
 @Composable

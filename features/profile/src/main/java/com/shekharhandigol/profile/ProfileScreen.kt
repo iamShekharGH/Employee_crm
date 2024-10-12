@@ -39,8 +39,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.shekharhandigol.data.models.EmployeeGender
-import com.shekharhandigol.data.models.UserInformation
+import com.shekharhandigol.models.EmployeeGender
+import com.shekharhandigol.models.UserInformation
 import com.shekharhandigol.theme.BothPreviews
 import kotlinx.coroutines.launch
 

@@ -13,11 +13,13 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-kotlinxSerializationJson = "1.6.3"
-lifecycleRuntimeKtx = "2.8.6"
+kotlinxSerializationJson = "1.7.3"
+ktorBom = "2.3.12"
+ktorClientCore = "3.0.0"
 activityCompose = "1.9.2"
 composeBom = "2024.09.02"
 appcompat = "1.7.0"
+ktorClientPluginsHttpTimeout = "2.3.0"
 lifecycleViewmodelCompose = "2.8.6"
 material = "1.12.0"
 navigationCompose = "2.8.1"
@@ -35,6 +37,7 @@ protobuf = "0.9.4"
 
 dataStore = "1.0.0"
 protobufJavaLite = "3.25.0"
+ktor = "2.3.12"
 
 
 [libraries]
@@ -80,7 +83,20 @@ androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", versi
 
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+ktor-client-plugins-http-timeout = { module = "io.ktor:ktor-client-plugins-http-timeout", version.ref = "ktorClientPluginsHttpTimeout" }
+ktor-client-serialization = { module = "io.ktor:ktor-client-serialization" }
+#ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-bom = { module = "io.ktor:ktor-bom", version.ref = "ktor" }
+ktor-client-android = { module = "io.ktor:ktor-client-android" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCore" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+
+
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }

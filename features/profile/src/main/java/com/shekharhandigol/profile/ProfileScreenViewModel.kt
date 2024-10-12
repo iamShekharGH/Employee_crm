@@ -2,7 +2,7 @@ package com.shekharhandigol.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shekharhandigol.data.models.isValid
+import com.shekharhandigol.models.isValid
 import com.shekharhandigol.datastore.SessionHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

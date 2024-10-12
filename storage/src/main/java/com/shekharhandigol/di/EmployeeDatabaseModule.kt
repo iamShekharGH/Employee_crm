@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.shekharhandigol.data.EmployeeDAO
 import com.shekharhandigol.data.EmployeeDatabase
 import com.shekharhandigol.data.HolidaysDAO
-import com.shekharhandigol.data.models.UserInformation
+import com.shekharhandigol.models.UserInformation
 import com.shekharhandigol.datastore.EmployeeCRMSessionHandler
 import com.shekharhandigol.datastore.SessionHandler
 import com.shekharhandigol.mapper.FromAppToUserInformation
