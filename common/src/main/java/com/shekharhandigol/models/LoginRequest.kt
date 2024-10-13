@@ -14,7 +14,7 @@ data class LoginRequest(
 @Serializable
 data class LoginResponse(
     val status: Int,
-    val data: UserInformation? = null,
+    val data: UserInformation
 ) : Response
 
 @Serializable

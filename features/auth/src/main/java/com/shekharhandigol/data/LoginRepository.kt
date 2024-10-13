@@ -2,8 +2,8 @@ package com.shekharhandigol.data
 
 import com.shekharhandigol.models.LoginRequest
 import com.shekharhandigol.models.LoginResponse
-import kotlinx.coroutines.flow.Flow
+import com.shekharhandigol.models.Resource
 
 interface LoginRepository {
-    suspend fun loginUser(loginRequest: LoginRequest): Flow<LoginResponse>
+    suspend fun loginUser(loginRequest: LoginRequest): Resource<LoginResponse>
 }

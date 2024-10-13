@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.shekharhandigol.auth.LoginUserUiState
 import com.shekharhandigol.auth.R
 import com.shekharhandigol.theme.BothPreviews
 
@@ -52,14 +55,50 @@ fun LoginScreen(
         ).show()
     }
 
+    when (state.value) {
+        LoginUserUiState.FirstBoot -> {
 
-    LoginUI(
-        login = viewModel.loginToAccount,
-        validateUsername = viewModel.validateUsername,
-        validatePassword = viewModel.validatePassword,
-        onSignInClick = onSignInClick,
-        goToHome = goToHome
-    )
+        }
+
+        LoginUserUiState.UserState.UserIsLoggedIn,
+        is LoginUserUiState.Response.Success -> {
+            goToHome()
+        }
+
+        LoginUserUiState.Response.Error -> {
+            Toast.makeText(
+                context,
+                "Ohoo Error ${state.value}",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        LoginUserUiState.Response.Loading -> {
+            LoginUI(
+                login = viewModel.loginToAccount,
+                validateUsername = viewModel.validateUsername,
+                validatePassword = viewModel.validatePassword,
+                onSignInClick = onSignInClick,
+                goToHome = goToHome,
+                showLoading = true
+            )
+        }
+
+
+        LoginUserUiState.UserState.UserIsLoggedOut,
+        LoginUserUiState.UserState.UserIsNew -> {
+            LoginUI(
+                login = viewModel.loginToAccount,
+                validateUsername = viewModel.validateUsername,
+                validatePassword = viewModel.validatePassword,
+                onSignInClick = onSignInClick,
+                goToHome = goToHome
+            )
+        }
+    }
+
+
+
 }
 
 @Composable
@@ -68,7 +107,8 @@ fun LoginUI(
     validateUsername: (String) -> Boolean,
     validatePassword: (String) -> Boolean,
     onSignInClick: () -> Unit,
-    goToHome: () -> Unit
+    goToHome: () -> Unit, //TODO("remove this in future")
+    showLoading: Boolean = false
 ) {
     Surface(
         modifier = Modifier
@@ -76,6 +116,22 @@ fun LoginUI(
             .background(color = MaterialTheme.colorScheme.primaryContainer)
             .verticalScroll(state = rememberScrollState()),
     ) {
+        if (showLoading)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f))
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(10.dp)
+                        .padding(50.dp),
+                    strokeWidth = 4.dp,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    trackColor = MaterialTheme.colorScheme.primaryContainer,
+                )
+            }
+
         var username by remember { mutableStateOf("") }
         var usernameError by remember { mutableStateOf(false) }
 
@@ -154,9 +210,9 @@ fun LoginUI(
                     val validationResult = login(username, password)
                     usernameError = validationResult.first
                     passwordError = validationResult.second
-                    if (!usernameError && !passwordError) {
+                    /*if (!usernameError && !passwordError) {
                         goToHome()
-                    }
+                    }*/
                 }) {
                 Text(text = stringResource(R.string.login))
             }

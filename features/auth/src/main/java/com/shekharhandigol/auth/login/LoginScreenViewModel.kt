@@ -8,6 +8,7 @@ import com.shekharhandigol.auth.login.validation.ValidatorFactory
 import com.shekharhandigol.data.LoginRepository
 import com.shekharhandigol.datastore.SessionHandler
 import com.shekharhandigol.models.LoginRequest
+import com.shekharhandigol.models.Resource
 import com.shekharhandigol.models.UserInformation
 import com.shekharhandigol.models.isPartiallyValid
 import com.shekharhandigol.models.isValid
@@ -24,7 +25,6 @@ class LoginScreenViewModel @Inject constructor(
     private val dataStore: SessionHandler,
     private val loginRepository: LoginRepository,
 ) : ViewModel() {
-
 
     private val _loginStateFlow = MutableStateFlow<LoginUserUiState>(LoginUserUiState.FirstBoot)
     val loginStateFlow = _loginStateFlow.asStateFlow()
@@ -45,16 +45,18 @@ class LoginScreenViewModel @Inject constructor(
 
     private fun makeLoginRequestAndSaveInfo(username: String, password: String) {
         viewModelScope.launch {
-            loginRepository.loginUser(
+            val res = loginRepository.loginUser(
                 LoginRequest(
                     username = username,
                     password = password
                 )
-            ).collectLatest {
-                if (it.status == 200) {
-                    it.data?.let { userInformation ->
-                        saveUserInformation(userInformation)
-                    }
+            )
+            _loginStateFlow.value = when (res) {
+                is Resource.Error -> LoginUserUiState.Response.Error
+                is Resource.Loading -> LoginUserUiState.Response.Loading
+                is Resource.Success -> {
+                    saveUserInformation(res.data.data)
+                    LoginUserUiState.Response.Success(res.data.data)
                 }
             }
         }
@@ -72,9 +74,9 @@ class LoginScreenViewModel @Inject constructor(
             userInformation.collectLatest { info ->
 
                 _loginStateFlow.value = when {
-                    info.isValid() -> LoginUserUiState.UserIsLoggedIn
-                    info.isPartiallyValid() -> LoginUserUiState.UserIsLoggedOut
-                    else -> LoginUserUiState.UserIsNew
+                    info.isValid() -> LoginUserUiState.UserState.UserIsLoggedIn
+                    info.isPartiallyValid() -> LoginUserUiState.UserState.UserIsLoggedOut
+                    else -> LoginUserUiState.UserState.UserIsNew
                 }
                 Log.d("LoginScreenViewModel", "checkUserSignInState: $info")
             }
