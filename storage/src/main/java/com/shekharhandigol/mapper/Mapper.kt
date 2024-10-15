@@ -1,7 +1,7 @@
 package com.shekharhandigol.mapper
 
-import com.shekharhandigol.data.models.EmployeeGender
-import com.shekharhandigol.data.models.UserInformation
+import com.shekharhandigol.models.EmployeeGender
+import com.shekharhandigol.models.UserInformation
 import com.shekharhandigol.storage.AppUserInformation
 import com.shekharhandigol.storage.Employee
 import javax.inject.Inject

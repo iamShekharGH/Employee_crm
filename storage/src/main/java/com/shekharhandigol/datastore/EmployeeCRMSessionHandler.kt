@@ -1,11 +1,10 @@
 package com.shekharhandigol.datastore
 
 import android.content.Context
-import com.shekharhandigol.data.models.EmployeeGender
-import com.shekharhandigol.data.models.UserInformation
+import com.shekharhandigol.models.UserInformation
 import com.shekharhandigol.mapper.Mapper
 import com.shekharhandigol.storage.AppUserInformation
-import com.shekharhandigol.storage.Employee
+import com.shekharhandigol.storage.AuthToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -48,6 +47,18 @@ class EmployeeCRMSessionHandler @Inject constructor(
     override suspend fun getUserInformation(): Flow<UserInformation> {
         return getSession().map {
             mapper.map(it)
+        }
+    }
+
+    override suspend fun getAuthToken(): Flow<String?> {
+        return context.authTokenDataStore.data.map { authToken ->
+            authToken.authToken
+        }
+    }
+
+    override suspend fun setAuthToken(authToken: String) {
+        context.authTokenDataStore.updateData {
+            AuthToken.newBuilder().setAuthToken(authToken).build()
         }
     }
 

@@ -1,5 +1,8 @@
-package com.shekharhandigol.data.models
+package com.shekharhandigol.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class UserInformation(
     val eid: Int,
     val name: String,

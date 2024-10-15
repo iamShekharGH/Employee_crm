@@ -25,3 +25,7 @@ message AppUserInformation {
   string birthday = 4;
   int64 salary = 5;
 }
+
+message AuthToken{
+  string authToken = 1;
+}

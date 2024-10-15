@@ -47,4 +47,5 @@ features/auth/google-services.json
 /.kotlin/
 /*.log
 
+/gradle/wrapper/gradle-wrapper.properties
 

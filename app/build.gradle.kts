@@ -26,6 +26,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -62,7 +69,7 @@ dependencies {
     implementation(project(":features:home"))
     implementation(project(":features:attendanceSummary"))
     implementation(project(":features:salarySummary"))
-    implementation(project(":common"))
+    implementation(project(":common")) // TODO("this needs to go i think!!")
 
 
     implementation(libs.androidx.runtime.android)

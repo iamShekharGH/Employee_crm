@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shekharhandigol.auth.LoginUserUiState
 import com.shekharhandigol.auth.login.validation.ValidatorFactory
-import com.shekharhandigol.data.models.EmployeeGender
-import com.shekharhandigol.data.models.UserInformation
-import com.shekharhandigol.data.models.isPartiallyValid
-import com.shekharhandigol.data.models.isValid
+import com.shekharhandigol.data.LoginRepository
 import com.shekharhandigol.datastore.SessionHandler
+import com.shekharhandigol.models.LoginRequest
+import com.shekharhandigol.models.Resource
+import com.shekharhandigol.models.UserInformation
+import com.shekharhandigol.models.isPartiallyValid
+import com.shekharhandigol.models.isValid
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,9 +22,9 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
     private val validatorFactory: ValidatorFactory,
-    private val dataStore: SessionHandler
+    private val dataStore: SessionHandler,
+    private val loginRepository: LoginRepository,
 ) : ViewModel() {
-
 
     private val _loginStateFlow = MutableStateFlow<LoginUserUiState>(LoginUserUiState.FirstBoot)
     val loginStateFlow = _loginStateFlow.asStateFlow()
@@ -31,39 +33,33 @@ class LoginScreenViewModel @Inject constructor(
         checkUserSignInState()
     }
 
-    private fun resetApp(){
-        viewModelScope.launch {
-            dataStore.clear()
-        }
-    }
-
     val loginToAccount: (String, String) -> Pair<Boolean, Boolean> = { username, password ->
         val validationResult = validateText(username, password)
 
         if (!validationResult.first && !validationResult.second) {
-            makeLoginRequestAndSaveInfo()
+            makeLoginRequestAndSaveInfo(username, password)
         }
 
         validationResult
     }
 
-    private fun makeLoginRequestAndSaveInfo() {
-
-        saveUserInformation(
-            UserInformation(
-                eid = 1,
-                name = "Shekhar Handigol",
-                title = "Software Engineer",
-                age = 25,
-                birthday = "1997-01-01",
-                presentToday = true,
-                salaryCredited = false,
-                email = "joseph.mckenna@examplepetstore.com",
-                employeeGender = EmployeeGender.Male,
-                photoUrl = "",
-                salary = 2100000
+    private fun makeLoginRequestAndSaveInfo(username: String, password: String) {
+        viewModelScope.launch {
+            val res = loginRepository.loginUser(
+                LoginRequest(
+                    username = username,
+                    password = password
+                )
             )
-        )
+            _loginStateFlow.value = when (res) {
+                is Resource.Error -> LoginUserUiState.Response.Error
+                is Resource.Loading -> LoginUserUiState.Response.Loading
+                is Resource.Success -> {
+                    saveUserInformation(res.data.data)
+                    LoginUserUiState.Response.Success(res.data.data)
+                }
+            }
+        }
     }
 
     private fun saveUserInformation(appUserInformation: UserInformation) {
@@ -78,9 +74,9 @@ class LoginScreenViewModel @Inject constructor(
             userInformation.collectLatest { info ->
 
                 _loginStateFlow.value = when {
-                    info.isValid() -> LoginUserUiState.UserIsLoggedIn
-                    info.isPartiallyValid() -> LoginUserUiState.UserIsLoggedOut
-                    else -> LoginUserUiState.UserIsNew
+                    info.isValid() -> LoginUserUiState.UserState.UserIsLoggedIn
+                    info.isPartiallyValid() -> LoginUserUiState.UserState.UserIsLoggedOut
+                    else -> LoginUserUiState.UserState.UserIsNew
                 }
                 Log.d("LoginScreenViewModel", "checkUserSignInState: $info")
             }

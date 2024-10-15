@@ -32,23 +32,29 @@ fun SplashScreen(
 ) {
     val state = viewModel.loginStateFlow.collectAsStateWithLifecycle()
     when (state.value) {
-        LoginUserUiState.UserIsNew,
+        LoginUserUiState.UserState.UserIsNew,
         LoginUserUiState.FirstBoot -> {
-            Splash(navigateToLogin, navigateToHome)
+            Splash(navigateToLogin)
         }
 
-        LoginUserUiState.UserIsLoggedIn -> {
+        LoginUserUiState.UserState.UserIsLoggedIn -> {
             navigateToHome()
         }
 
-        LoginUserUiState.UserIsLoggedOut -> {
+        LoginUserUiState.UserState.UserIsLoggedOut -> {
             navigateToLogin()
+        }
+
+        LoginUserUiState.Response.Error,
+        LoginUserUiState.Response.Loading,
+        is LoginUserUiState.Response.Success -> {
+            println("observing from Splash Screen\t:${state.value} ")
         }
     }
 }
 
 @Composable
-fun Splash(navigateToLogin: () -> Unit, navigateToHome: () -> Unit) {
+fun Splash(navigateToLogin: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -94,5 +100,5 @@ fun Splash(navigateToLogin: () -> Unit, navigateToHome: () -> Unit) {
 @BothPreviews
 @Composable
 fun PreviewSplash() {
-    Splash({}, {})
+    Splash({})
 }
