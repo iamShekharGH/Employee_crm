@@ -26,7 +26,7 @@ class ApiServiceImp @Inject constructor(private val client: HttpClient) : ApiSer
 
     override suspend fun login(req: LoginRequest): Resource<LoginResponse> {
         return try {
-            val res: LoginResponse = client.post("$/login") {
+            val res: LoginResponse = client.post("/login") {
                 contentType(ContentType.Application.Json)
                 setBody(req)
             }.body()
@@ -34,8 +34,6 @@ class ApiServiceImp @Inject constructor(private val client: HttpClient) : ApiSer
 
         } catch (e: Exception) {
             handleError(e)
-            // Any other unknown errors
-            Resource.Error(message = "Unknown error", cause = e)
         }
     }
 

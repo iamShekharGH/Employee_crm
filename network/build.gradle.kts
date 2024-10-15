@@ -53,17 +53,16 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     // ktor
-    implementation(libs.ktor.client.core)/*{
-        exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
-    }*/
+
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.auth)
     implementation(platform(libs.ktor.bom))
     implementation(libs.ktor.client.android)
-//    implementation(libs.ktor.client.serialization)
+    implementation(libs.ktor.client.serialization)
     implementation(libs.ktor.serialization)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

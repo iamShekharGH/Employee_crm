@@ -21,6 +21,7 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -31,7 +32,8 @@ class KtorClient @Inject constructor(
     private val sessionHandler: SessionHandler
 ) {
     companion object {
-        const val BASE_URL = "http://127.0.0.1:8080/"
+//        const val BASE_URL = "http://127.0.0.1:8080/"
+        const val BASE_URL = "http://192.168.1.7:8080/"
     }
 
     fun build(): HttpClient {
@@ -53,7 +55,8 @@ class KtorClient @Inject constructor(
 
             install(Logging) {
                 logger = KtorLogger()
-               // level = LogLevel.ALL  causing crash!!!
+                level = LogLevel.ALL
+                sanitizeHeader { header -> header == HttpHeaders.Authorization }
             }
 
             install(DefaultRequest) {
@@ -67,14 +70,15 @@ class KtorClient @Inject constructor(
             }
 
             install(ContentNegotiation) {
-
-                Json {
-                    prettyPrint = true
-                    isLenient = true
-                    useAlternativeNames = true
-                    ignoreUnknownKeys = true
-                    encodeDefaults = false
-                }
+                json(
+                    Json {
+                        prettyPrint = true
+                        isLenient = true
+                        useAlternativeNames = true
+                        ignoreUnknownKeys = true
+                        encodeDefaults = false
+                    }
+                )
             }
 
             install(Auth) {
@@ -88,15 +92,16 @@ class KtorClient @Inject constructor(
                     }
                 }
             }
-
-
         }
     }
 }
 
 class KtorLogger : Logger {
     override fun log(message: String) {
-        Log.v("Ktor", message)
+        Log.v(
+            "KTOR_LOGGER",
+            message
+        )
     }
 }
 
