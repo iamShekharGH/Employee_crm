@@ -1,6 +1,7 @@
 package com.shekharhandigol.crm
 
 import HomeScreen
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -42,7 +43,15 @@ fun EmployeeCrmAppNavHost(
         authNavGraph(
             navController = go,
             onSignInClick = onSignInClick,
-            goToHome = { go to Destinations.Home },
+            goToHome = {
+
+                Log.d("AuthNavGraph", buildString {
+                    append("goToHome")
+                    append("go.graph.id = ${go.graph.id}")
+                })
+                go.popBackStack(go.graph.id, inclusive = true)
+                go to Destinations.Home
+            },
         )
         profileNavGraph(
             navController = go,

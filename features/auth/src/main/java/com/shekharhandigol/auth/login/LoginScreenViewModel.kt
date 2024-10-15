@@ -29,9 +29,17 @@ class LoginScreenViewModel @Inject constructor(
     private val _loginStateFlow = MutableStateFlow<LoginUserUiState>(LoginUserUiState.FirstBoot)
     val loginStateFlow = _loginStateFlow.asStateFlow()
 
-    init {
+
+    private val _passwordIsWrong = MutableStateFlow(Pair(false, ""))
+    val passwordIsWrong = _passwordIsWrong.asStateFlow()
+
+    private val _showLoading = MutableStateFlow(false)
+    val showLoading = _showLoading.asStateFlow()
+
+
+    /*init {
         checkUserSignInState()
-    }
+    }*/
 
     val loginToAccount: (String, String) -> Pair<Boolean, Boolean> = { username, password ->
         val validationResult = validateText(username, password)
@@ -52,7 +60,10 @@ class LoginScreenViewModel @Inject constructor(
                 )
             )
             _loginStateFlow.value = when (res) {
-                is Resource.Error -> LoginUserUiState.Response.Error
+                is Resource.Error -> {
+                    _passwordIsWrong.value = Pair(true, res.message)
+                    LoginUserUiState.Response.Error(res.message)
+                }
                 is Resource.Loading -> LoginUserUiState.Response.Loading
                 is Resource.Success -> {
                     saveUserInformation(res.data.data)
@@ -68,18 +79,20 @@ class LoginScreenViewModel @Inject constructor(
         }
     }
 
-    private fun checkUserSignInState() {
+    fun checkUserSignInState() {
         viewModelScope.launch {
-            val userInformation = dataStore.getUserInformation()
-            userInformation.collectLatest { info ->
-
-                _loginStateFlow.value = when {
-                    info.isValid() -> LoginUserUiState.UserState.UserIsLoggedIn
-                    info.isPartiallyValid() -> LoginUserUiState.UserState.UserIsLoggedOut
-                    else -> LoginUserUiState.UserState.UserIsNew
-                }
-                Log.d("LoginScreenViewModel", "checkUserSignInState: $info")
+            dataStore.getUserInformation().collectLatest { userInfo ->
+                _loginStateFlow.value = determineLoginState(userInfo)
+                Log.d("LoginScreenViewModel", "checkUserSignInState: $userInfo")
             }
+        }
+    }
+
+    private fun determineLoginState(userInfo: UserInformation): LoginUserUiState.UserState {
+        return when {
+            userInfo.isValid() -> LoginUserUiState.UserState.UserIsLoggedIn
+            userInfo.isPartiallyValid() -> LoginUserUiState.UserState.UserIsLoggedOut
+            else -> LoginUserUiState.UserState.UserIsNew
         }
     }
 

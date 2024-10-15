@@ -1,5 +1,6 @@
 package com.shekhargh.network
 
+import com.shekharhandigol.models.ErrorResponse
 import com.shekharhandigol.models.LoginRequest
 import com.shekharhandigol.models.LoginResponse
 import com.shekharhandigol.models.Resource
@@ -37,7 +38,7 @@ class ApiServiceImp @Inject constructor(private val client: HttpClient) : ApiSer
         }
     }
 
-    private fun handleError(e: Exception): Resource<LoginResponse> {
+    private suspend fun handleError(e: Exception): Resource<LoginResponse> {
         e.printStackTrace()
         when (e) {
             is RedirectResponseException -> {
@@ -47,7 +48,8 @@ class ApiServiceImp @Inject constructor(private val client: HttpClient) : ApiSer
 
             is ClientRequestException -> {
                 // 4xx - Client error
-                return Resource.Error(e.response.status.value, "Client error", e)
+                val res = e.response.body<ErrorResponse>()
+                return Resource.Error(res.status, res.message, e)
             }
 
             is ServerResponseException -> {

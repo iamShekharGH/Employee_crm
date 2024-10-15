@@ -24,8 +24,8 @@ class FromAppToUserInformation @Inject constructor() : Mapper<AppUserInformation
             salaryCredited = from.employee.salaryCredited,
             salary = from.salary,
             employeeGender = when (from.employee.gender) {
-                Employee.Gender.MALE -> EmployeeGender.Male
-                Employee.Gender.FEMALE -> EmployeeGender.Female
+                Employee.Gender.MALE -> EmployeeGender.MALE
+                Employee.Gender.FEMALE -> EmployeeGender.FEMALE
                 Employee.Gender.UNRECOGNIZED -> EmployeeGender.Unrecognized
             }
         )
@@ -44,8 +44,8 @@ class FromUserInformationToApp @Inject constructor() : Mapper<UserInformation, A
                 salaryCredited = from.salaryCredited
                 salary = from.salary
                 gender = when (from.employeeGender) {
-                    EmployeeGender.Male -> Employee.Gender.MALE
-                    EmployeeGender.Female -> Employee.Gender.FEMALE
+                    EmployeeGender.MALE -> Employee.Gender.MALE
+                    EmployeeGender.FEMALE -> Employee.Gender.FEMALE
                     EmployeeGender.Unrecognized -> Employee.Gender.UNRECOGNIZED
                 }
                 email = from.email

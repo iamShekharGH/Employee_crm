@@ -357,7 +357,7 @@ fun PreviewProfileUI() {
             presentToday = true,
             salaryCredited = false,
             email = "william.strong@my-own-personal-domain.com",
-            employeeGender = EmployeeGender.Male,
+            employeeGender = EmployeeGender.MALE,
             photoUrl = "",
             salary = 50000000
         )

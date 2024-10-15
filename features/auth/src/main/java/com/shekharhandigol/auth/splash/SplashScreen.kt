@@ -11,6 +11,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -30,6 +31,9 @@ fun SplashScreen(
     navigateToHome: () -> Unit,
     viewModel: LoginScreenViewModel
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.checkUserSignInState()
+    }
     val state = viewModel.loginStateFlow.collectAsStateWithLifecycle()
     when (state.value) {
         LoginUserUiState.UserState.UserIsNew,
@@ -45,9 +49,7 @@ fun SplashScreen(
             navigateToLogin()
         }
 
-        LoginUserUiState.Response.Error,
-        LoginUserUiState.Response.Loading,
-        is LoginUserUiState.Response.Success -> {
+        is LoginUserUiState.Response -> {
             println("observing from Splash Screen\t:${state.value} ")
         }
     }
