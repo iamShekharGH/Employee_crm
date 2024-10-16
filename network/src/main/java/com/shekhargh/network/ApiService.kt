@@ -7,6 +7,7 @@ import com.shekharhandigol.models.Resource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
@@ -60,6 +61,10 @@ class ApiServiceImp @Inject constructor(private val client: HttpClient) : ApiSer
             is IOException -> {
                 // Network issues (e.g., no internet connection)
                 return Resource.Error(message = "Network error", cause = e)
+            }
+
+            is HttpRequestTimeoutException -> {
+                return Resource.Error(message = "Request Timed out.", cause = e)
             }
 
             else -> {

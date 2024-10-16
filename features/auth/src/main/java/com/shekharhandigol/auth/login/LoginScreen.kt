@@ -101,9 +101,6 @@ fun LoginUI(
             .background(color = MaterialTheme.colorScheme.primaryContainer)
             .verticalScroll(state = rememberScrollState()),
     ) {
-        if (showLoading.value) {
-            LoginScreenLoadingView()
-        }
 
         var username by remember { mutableStateOf("anita.sharma") }
         var usernameError by remember { mutableStateOf(false) }
@@ -202,6 +199,10 @@ fun LoginUI(
                 }) {
                 Text(text = "Login With Google!(Go Home)")
             }
+
+            if (showLoading.value) {
+                LoginScreenLoadingView()
+            }
         }
     }
 }
@@ -217,5 +218,5 @@ fun PreviewLoginUI() {
         validatePassword = { false },
         wrongPasswordState = remember { mutableStateOf(Pair(false, "")) },
         onSignInClick = {},
-        showLoading = remember { mutableStateOf(true) })
+        showLoading = remember { mutableStateOf(false) })
 }

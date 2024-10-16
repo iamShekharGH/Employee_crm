@@ -53,23 +53,43 @@ class LoginScreenViewModel @Inject constructor(
 
     private fun makeLoginRequestAndSaveInfo(username: String, password: String) {
         viewModelScope.launch {
+            showLoadingUI()
             val res = loginRepository.loginUser(
                 LoginRequest(
                     username = username,
                     password = password
                 )
             )
+
             _loginStateFlow.value = when (res) {
                 is Resource.Error -> {
+                    hideLoadingUI()
                     _passwordIsWrong.value = Pair(true, res.message)
                     LoginUserUiState.Response.Error(res.message)
                 }
-                is Resource.Loading -> LoginUserUiState.Response.Loading
+
+                is Resource.Loading -> {
+                    showLoadingUI()
+                    LoginUserUiState.Response.Loading
+                }
                 is Resource.Success -> {
+                    hideLoadingUI()
                     saveUserInformation(res.data.data)
                     LoginUserUiState.Response.Success(res.data.data)
                 }
             }
+        }
+    }
+
+    private fun showLoadingUI() {
+        viewModelScope.launch {
+            _showLoading.value = true
+        }
+    }
+
+    private fun hideLoadingUI() {
+        viewModelScope.launch {
+            _showLoading.value = false
         }
     }
 

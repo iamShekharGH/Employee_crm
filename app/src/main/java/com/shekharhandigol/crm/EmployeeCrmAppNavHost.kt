@@ -49,6 +49,7 @@ fun EmployeeCrmAppNavHost(
                     append("goToHome")
                     append("go.graph.id = ${go.graph.id}")
                 })
+//                TODO("uncomment when check login is working")
                 go.popBackStack(go.graph.id, inclusive = true)
                 go to Destinations.Home
             },
@@ -56,6 +57,10 @@ fun EmployeeCrmAppNavHost(
         profileNavGraph(
             navController = go,
             goToHome = { go.popBackStack() },
+            gotoSplash = {
+                go.popBackStack()
+                go to Destinations.Splash
+            }
         )
         homeNavigationGraph(
             navController = go,
