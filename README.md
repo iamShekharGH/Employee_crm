@@ -48,7 +48,8 @@
    * **Additional features:**
      * Employee photo   
      * Performance reviews
-     * | ![Login Successfull](ResourcesUsedInProject/appUI/open_profile_page_light.gif)  |  ![Login Successfull](ResourcesUsedInProject/appUI/open_profile_page_dark.gif) |
+
+       | ![Login Successfull](ResourcesUsedInProject/appUI/open_profile_page_light.gif)  |  ![Login Successfull](ResourcesUsedInProject/appUI/open_profile_page_dark.gif) |
        |---|---|
 
 3. **Attendance History Screen:**
@@ -56,7 +57,8 @@
      * Date
      * Attendance status
      * Remarks (if any)
-     * | ![Login Successfull](ResourcesUsedInProject/appUI/attendance_summary_ui_light.gif)  |  ![Login Successfull](ResourcesUsedInProject/appUI/attendance_summary_ui_dark.gif) |
+     
+      | ![Login Successfull](ResourcesUsedInProject/appUI/attendance_summary_ui_light.gif)  |  ![Login Successfull](ResourcesUsedInProject/appUI/attendance_summary_ui_dark.gif) |
               |---|---|
 
 4. **Salary Details Screen:**
@@ -68,9 +70,11 @@
    * **Additional features:**
      * Salary history
      * Tax calculations
-     * | ![Login Successfull](ResourcesUsedInProject/appUI/salary_summaryOpen_light.gif)  |  ![Login Successfull](ResourcesUsedInProject/appUI/salary_summary_dark.gif) |
+     
+      | ![Login Successfull](ResourcesUsedInProject/appUI/salary_summaryOpen_light.gif)  |  ![Login Successfull](ResourcesUsedInProject/appUI/salary_summary_dark.gif) |
                      |---|---|
 
 5. **Logout from App**
-    * | ![Login Successfull](ResourcesUsedInProject/appUI/logout_light.gif)  |  ![Login Successfull](ResourcesUsedInProject/appUI/logout_dark.gif) |
+
+     | ![Login Successfull](ResourcesUsedInProject/appUI/logout_light.gif)  |  ![Login Successfull](ResourcesUsedInProject/appUI/logout_dark.gif) |
                            |---|---|
