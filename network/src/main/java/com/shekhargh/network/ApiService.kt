@@ -1,5 +1,6 @@
 package com.shekhargh.network
 
+import com.shekharhandigol.datastore.SessionHandler
 import com.shekharhandigol.models.EmployeeResponse
 import com.shekharhandigol.models.ErrorResponse
 import com.shekharhandigol.models.LoginRequest
@@ -12,10 +13,13 @@ import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.io.IOException
 import timber.log.Timber
 import javax.inject.Inject
@@ -25,7 +29,10 @@ interface ApiService {
     suspend fun getEmployeeList(): Resource<EmployeeResponse>
 }
 
-class ApiServiceImp @Inject constructor(private val client: HttpClient) : ApiService {
+class ApiServiceImp @Inject constructor(
+    private val client: HttpClient,
+    private val sessionHandler: SessionHandler
+) : ApiService {
 
     private suspend inline fun <reified T> makeApiRequest(request: () -> T): Resource<T> =
         runCatching {
@@ -43,7 +50,17 @@ class ApiServiceImp @Inject constructor(private val client: HttpClient) : ApiSer
     }
 
     override suspend fun getEmployeeList(): Resource<EmployeeResponse> = makeApiRequest {
-        client.get("/employees").body()
+        val authToken: String? = sessionHandler.getAuthToken().firstOrNull()
+
+        if (!authToken.isNullOrEmpty() && authToken.count() > 10) {
+            Timber.d("authToken: $authToken")
+            client.get("/employees") {
+                header(HttpHeaders.Authorization, "Bearer $authToken")
+            }.body()
+
+        } else {
+            throw Exception("Auth token is null")
+        }
     }
 
     private suspend fun <T> handleError(e: Throwable): Resource<T> {

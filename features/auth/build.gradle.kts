@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
 
     implementation(libs.hilt.android)
+    implementation(libs.jakewharton.timber)
     kapt(libs.hilt.android.compiler)
 
     implementation(platform(libs.firebase.bom))

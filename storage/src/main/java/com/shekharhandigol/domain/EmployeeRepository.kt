@@ -14,6 +14,9 @@ class EmployeeRepository @Inject constructor(
     suspend fun insertNewEmployee(e: Employee) {
         dao.insertEmployee(e)
     }
+    suspend fun insertEmployees(e: List<Employee>) {
+        dao.insertAll(*e.toTypedArray())
+    }
 
     fun getAllEmployees(): Flow<List<Employee>> {
         return dao.getAll()

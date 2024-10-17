@@ -70,6 +70,7 @@ dependencies {
     implementation(project(":features:attendanceSummary"))
     implementation(project(":features:salarySummary"))
     implementation(project(":common")) // TODO("this needs to go i think!!")
+    implementation(project(":storage"))
 
 
     implementation(libs.androidx.runtime.android)
@@ -83,6 +84,7 @@ dependencies {
     implementation(libs.play.services.base)
     implementation(libs.play.services.auth)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.jakewharton.timber)
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)

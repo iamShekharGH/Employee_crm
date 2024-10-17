@@ -27,6 +27,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.shekharhandigol.data.models.Employee
+import com.shekharhandigol.data.models.Gender
 import com.shekharhandigol.theme.BothPreviews
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,6 +40,9 @@ internal fun HomeScreen(
     viewModel: HomeScreenViewModel
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
+    viewModel.fetchEmployees()
+
     HomeUI(goToProfile = goToProfile, uiState = uiState, openDrawer = openDrawer)
 }
 
@@ -97,7 +102,6 @@ private fun HomeUI(
                             contentDescription = ""
                         )
                     }
-
                 },
                 actions = {
                     IconButton(onClick = { goToProfile() }) {
@@ -106,7 +110,6 @@ private fun HomeUI(
                             contentDescription = ""
                         )
                     }
-
                 }
             )
         },
@@ -117,15 +120,19 @@ private fun HomeUI(
             }
 
             HomeUiState.Empty -> {
-                StartingScreen("Employee List is Empty.")
+                StartingScreen(text = "Employee List is Empty.")
             }
 
             HomeUiState.Error -> {
-
+                StartingScreen(text = "Cannot fetch the list of employees.")
             }
 
             is HomeUiState.EmployeeList -> {
                 EmployeeListScreen(innerPadding, ui.list)
+            }
+
+            HomeUiState.Loading -> {
+                StartingScreen(text = "Loading...", isLoading = true)
             }
         }
 
@@ -139,6 +146,61 @@ private fun HomeUI(
 
 @BothPreviews
 @Composable
+fun PreviewHomeUIList() {
+    HomeUI(
+        goToProfile = {},
+        uiState = rememberUpdatedState(
+            newValue = HomeUiState.EmployeeList(
+                listOf(
+                    Employee(
+                        eid = 1234,
+                        name = "Rakesh Jhun Jhun",
+                        title = "Serial Jhadu Poocha",
+                        presentToday = true,
+                        salaryCredited = false,
+                        gender = Gender.MALE,
+                        photoUrl = ""
+                    ),
+                    Employee(
+                        eid = 1234,
+                        name = "Rakesh Jhun Jhun",
+                        title = "Serial Jhadu Poocha",
+                        presentToday = true,
+                        salaryCredited = false,
+                        gender = Gender.MALE,
+                        photoUrl = ""
+                    ),
+                    Employee(
+                        eid = 1234,
+                        name = "Rakesh Jhun Jhun",
+                        title = "Serial Jhadu Poocha",
+                        presentToday = true,
+                        salaryCredited = false,
+                        gender = Gender.MALE,
+                        photoUrl = ""
+                    ),
+                    Employee(
+                        eid = 1234,
+                        name = "Rakesh Jhun Jhun",
+                        title = "Serial Jhadu Poocha",
+                        presentToday = true,
+                        salaryCredited = false,
+                        gender = Gender.MALE,
+                        photoUrl = ""
+                    )
+                )
+            )
+        ),
+        openDrawer = { { } }
+    )
+}
+
+@BothPreviews
+@Composable
 fun PreviewHomeUI() {
-    HomeUI({}, rememberUpdatedState(HomeUiState.Empty), { {  } })
+    HomeUI(
+        goToProfile = {},
+        uiState = rememberUpdatedState(newValue = HomeUiState.Empty),
+        openDrawer = { { } }
+    )
 }

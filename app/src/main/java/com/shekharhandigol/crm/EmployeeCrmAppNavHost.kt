@@ -1,7 +1,6 @@
 package com.shekharhandigol.crm
 
 import HomeScreen
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,17 +11,7 @@ import com.shekharhandigol.common.Destinations
 import com.shekharhandigol.homeNavigationGraph
 import com.shekharhandigol.profileNavGraph
 import com.shekharhandigol.salarySummaryNavGraph
-
-
-fun travelToDestination(
-    navController: NavHostController,
-    destination: Destinations
-): () -> Unit {
-
-    return {
-        navController.navigate(destination)
-    }
-}
+import timber.log.Timber
 
 infix fun NavHostController.to(d: Destinations) {
     run { this.navigate(d) }
@@ -45,7 +34,7 @@ fun EmployeeCrmAppNavHost(
             onSignInClick = onSignInClick,
             goToHome = {
 
-                Log.d("AuthNavGraph", buildString {
+                Timber.tag("AuthNavGraph").d(buildString {
                     append("goToHome")
                     append("go.graph.id = ${go.graph.id}")
                 })

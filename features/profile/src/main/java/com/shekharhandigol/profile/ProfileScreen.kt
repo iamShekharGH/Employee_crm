@@ -133,8 +133,8 @@ fun ProfileUI(
                     }
                     IconButton(onClick = {
                         scope.launch {
-                            snackbarHostState.showSnackbar("Logging Out!")
                             logout()
+//                            snackbarHostState.showSnackbar("Logging Out!")
                             goToSplash()
                         }
                     }) {

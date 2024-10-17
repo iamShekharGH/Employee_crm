@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,7 +22,7 @@ import com.shekharhandigol.theme.BothPreviews
 
 @BothPreviews
 @Composable
-fun StartingScreen(text: String = "Hi, Welcome!!") {
+fun StartingScreen(text: String = "Hi, Welcome!!", isLoading: Boolean = false) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,6 +40,12 @@ fun StartingScreen(text: String = "Hi, Welcome!!") {
             contentDescription = "Welcome",
             tint = MaterialTheme.colorScheme.onPrimaryContainer
         )
+        if (isLoading)
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(50.dp)
+                    .padding(16.dp),
+            )
         Text(
             text = text,
             style = MaterialTheme.typography.displayMedium,
