@@ -1,9 +1,13 @@
-## Comprehensive Details for Your Attendance and Salary Employee CRM Android App
+## Attendance and Salary Employee CRM Android App
+
+**A comprehensive CRM app for managing employee attendance, salary, and other HR-related tasks.**
 
 ### Initial Screens:
 1. **Welcome Screen:**
    * **Content:** A brief introduction to the app, its purpose, and benefits.
    * **Action:** A "Get Started" button to proceed to the login screen.
+   * ![Welcome screen](ResourcesUsedInProject/appUI/openapp_dark.gif)
+   * ![Splash to Login](ResourcesUsedInProject/appUI/splash_to_login_dark.gif)
 
 2. **Login Screen:**
    * **Content:** Google sign-in button.
