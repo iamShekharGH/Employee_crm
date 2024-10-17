@@ -17,7 +17,44 @@ data class SalaryBreakdown(
 
 fun calculateSalaryBreakdown(annualIncome: Double): SalaryBreakdown {
 
-    val basicSalary = annualIncome / 12
+    val locale = java.util.Locale("en", "IN")
+
+    val basicSalary = String.format(locale, "%.2f", annualIncome / 12).toDouble()
+    val hra = String.format(locale, "%.2f", 0.3 * basicSalary).toDouble()
+    val conveyanceAllowance = 1000.0
+    val medicalAllowance = 500.0
+    val otherAllowances = 0.0
+
+    val totalEarnings = String.format(locale, "%.2f", basicSalary + hra + conveyanceAllowance + medicalAllowance + otherAllowances).toDouble()
+
+    val incomeTax = String.format(locale, "%.2f", calculateIncomeTax(annualIncome)/12).toDouble()
+
+    val providentFund = String.format(locale, "%.2f", 0.12 * basicSalary ).toDouble()
+
+    val professionalTax = 250.0
+
+    val otherDeductions = 0.0
+
+    val totalDeductions = String.format(locale, "%.2f", incomeTax + providentFund + professionalTax + otherDeductions).toDouble()
+
+    val netSalary = String.format(locale, "%.2f", totalEarnings - totalDeductions).toDouble()
+
+    return SalaryBreakdown(
+        basicSalary,
+        hra,
+        conveyanceAllowance,
+        medicalAllowance,
+        otherAllowances,
+        totalEarnings,
+        incomeTax,
+        providentFund,
+        professionalTax,
+        otherDeductions,
+        totalDeductions,
+        netSalary
+    )
+
+    /*val basicSalary = annualIncome / 12
     val hra = 0.3 * basicSalary
     val conveyanceAllowance = 1000.0
     val medicalAllowance = 500.0
@@ -51,7 +88,7 @@ fun calculateSalaryBreakdown(annualIncome: Double): SalaryBreakdown {
         otherDeductions,
         totalDeductions,
         netSalary
-    )
+    )*/
 }
 
 fun calculateIncomeTax(annualIncome: Double): Double {

@@ -111,7 +111,7 @@ fun SalarySummaryUI(salaryBreakdown: SalaryBreakdown, goToHome: () -> Unit) {
                         fontSize = 21.sp, textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleLarge
                     )
-                    RowInformation("Basic Salary", "₹ ${salaryBreakdown.basicSalary}")
+                    RowInformation("Monthly Salary", "₹ ${salaryBreakdown.basicSalary}")
                     RowInformation("HRA (House Rent Allowance)", "₹ ${salaryBreakdown.hra}")
                     RowInformation(
                         "Conveyance Allowance",
