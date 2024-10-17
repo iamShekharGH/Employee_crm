@@ -1,37 +1,35 @@
 package com.shekharhandigol.auth.login
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shekharhandigol.auth.LoginUserUiState
-import com.shekharhandigol.auth.login.validation.ValidatorFactory
-import com.shekharhandigol.data.LoginRepository
-import com.shekharhandigol.datastore.SessionHandler
-import com.shekharhandigol.models.LoginRequest
+import com.shekharhandigol.domain.CheckUserStateUseCase
+import com.shekharhandigol.domain.LoginUseCase
+import com.shekharhandigol.domain.ValidationUseCase
 import com.shekharhandigol.models.Resource
-import com.shekharhandigol.models.UserInformation
-import com.shekharhandigol.models.isPartiallyValid
-import com.shekharhandigol.models.isValid
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
-    private val validatorFactory: ValidatorFactory,
-    private val dataStore: SessionHandler,
-    private val loginRepository: LoginRepository,
+    private val loginUseCase: LoginUseCase,
+    private val validationUseCase: ValidationUseCase,
+    private val checkUserStateUseCase: CheckUserStateUseCase
 ) : ViewModel() {
 
     private val _loginStateFlow = MutableStateFlow<LoginUserUiState>(LoginUserUiState.FirstBoot)
     val loginStateFlow = _loginStateFlow.asStateFlow()
 
-    init {
-        checkUserSignInState()
-    }
+
+    private val _passwordIsWrong = MutableStateFlow(Pair(false, ""))
+    val passwordIsWrong = _passwordIsWrong.asStateFlow()
+
+    private val _showLoading = MutableStateFlow(false)
+    val showLoading = _showLoading.asStateFlow()
+
 
     val loginToAccount: (String, String) -> Pair<Boolean, Boolean> = { username, password ->
         val validationResult = validateText(username, password)
@@ -45,53 +43,67 @@ class LoginScreenViewModel @Inject constructor(
 
     private fun makeLoginRequestAndSaveInfo(username: String, password: String) {
         viewModelScope.launch {
-            val res = loginRepository.loginUser(
-                LoginRequest(
-                    username = username,
-                    password = password
-                )
-            )
-            _loginStateFlow.value = when (res) {
-                is Resource.Error -> LoginUserUiState.Response.Error
-                is Resource.Loading -> LoginUserUiState.Response.Loading
+            showLoadingUI()
+            _loginStateFlow.value = when (val res = loginUseCase.invoke(username, password)) {
+                is Resource.Error -> {
+                    hideLoadingUI()
+                    _passwordIsWrong.value = Pair(true, res.message)
+                    LoginUserUiState.Response.Error(res.message)
+                }
+
+                is Resource.Loading -> {
+                    showLoadingUI()
+                    LoginUserUiState.Response.Loading
+                }
+
                 is Resource.Success -> {
-                    saveUserInformation(res.data.data)
+                    hideLoadingUI()
                     LoginUserUiState.Response.Success(res.data.data)
                 }
             }
         }
     }
 
-    private fun saveUserInformation(appUserInformation: UserInformation) {
+    private fun showLoadingUI() {
         viewModelScope.launch {
-            dataStore.saveSession(appUserInformation)
+            _showLoading.value = true
         }
     }
 
-    private fun checkUserSignInState() {
+    private fun hideLoadingUI() {
         viewModelScope.launch {
-            val userInformation = dataStore.getUserInformation()
-            userInformation.collectLatest { info ->
-
-                _loginStateFlow.value = when {
-                    info.isValid() -> LoginUserUiState.UserState.UserIsLoggedIn
-                    info.isPartiallyValid() -> LoginUserUiState.UserState.UserIsLoggedOut
-                    else -> LoginUserUiState.UserState.UserIsNew
-                }
-                Log.d("LoginScreenViewModel", "checkUserSignInState: $info")
-            }
+            _showLoading.value = false
         }
     }
+
+
+    fun checkUserSignInState() {
+        viewModelScope.launch {
+            _loginStateFlow.value = checkUserStateUseCase.invoke()
+            /*dataStore.getUserInformation().collectLatest { userInfo ->
+                _loginStateFlow.value = determineLoginState(userInfo)
+                Log.d("LoginScreenViewModel", "checkUserSignInState: $userInfo")
+            }*/
+        }
+    }
+
+    /*private fun determineLoginState(userInfo: UserInformation): LoginUserUiState.UserState {
+        return when {
+            userInfo.isValid() -> LoginUserUiState.UserState.UserIsLoggedIn
+            userInfo.isPartiallyValid() -> LoginUserUiState.UserState.UserIsLoggedOut
+            else -> LoginUserUiState.UserState.UserIsNew
+        }
+    }*/
 
     val validateUsername: (String) -> Boolean = { username ->
-        !validatorFactory.getValidator(ValidatorFactory.ValidationTypes.EMAIL).check(username)
+        validationUseCase.checkUsername(username)
     }
     val validatePassword: (String) -> Boolean = { password ->
-        !validatorFactory.getValidator(ValidatorFactory.ValidationTypes.PASSWORD).check(password)
+        validationUseCase.checkPassword(password)
     }
 
     private fun validateText(username: String, password: String): Pair<Boolean, Boolean> {
-        return Pair(validateUsername(username), validatePassword(password))
+        return validationUseCase.invoke(username, password)
     }
 
 }

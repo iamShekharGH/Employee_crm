@@ -53,7 +53,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     // ktor
-
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.content.negotiation)
@@ -62,6 +61,8 @@ dependencies {
     implementation(libs.ktor.client.android)
     implementation(libs.ktor.client.serialization)
     implementation(libs.ktor.serialization)
+
+    implementation(libs.jakewharton.timber)
 
 
     testImplementation(libs.junit)

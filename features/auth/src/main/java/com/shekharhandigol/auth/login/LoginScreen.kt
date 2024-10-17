@@ -8,12 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,60 +43,47 @@ fun LoginScreen(
     viewModel: LoginScreenViewModel
 ) {
     val state = viewModel.loginStateFlow.collectAsStateWithLifecycle()
+    val passwordErrorState = viewModel.passwordIsWrong.collectAsStateWithLifecycle()
+    val showLoadingState = viewModel.showLoading.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-    LaunchedEffect(key1 = state.value) {
+    /*LaunchedEffect(key1 = state.value) {
         Toast.makeText(
             context,
             state.value.toString(),
             Toast.LENGTH_LONG
         ).show()
-    }
+    }*/
 
     when (state.value) {
-        LoginUserUiState.FirstBoot -> {
-
-        }
 
         LoginUserUiState.UserState.UserIsLoggedIn,
         is LoginUserUiState.Response.Success -> {
             goToHome()
         }
 
-        LoginUserUiState.Response.Error -> {
-            Toast.makeText(
-                context,
-                "Ohoo Error ${state.value}",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-
-        LoginUserUiState.Response.Loading -> {
-            LoginUI(
-                login = viewModel.loginToAccount,
-                validateUsername = viewModel.validateUsername,
-                validatePassword = viewModel.validatePassword,
-                onSignInClick = onSignInClick,
-                goToHome = goToHome,
-                showLoading = true
-            )
-        }
-
-
+        is LoginUserUiState.Response.Error,
+        LoginUserUiState.Response.Loading,
         LoginUserUiState.UserState.UserIsLoggedOut,
         LoginUserUiState.UserState.UserIsNew -> {
             LoginUI(
                 login = viewModel.loginToAccount,
                 validateUsername = viewModel.validateUsername,
                 validatePassword = viewModel.validatePassword,
+                wrongPasswordState = passwordErrorState,
                 onSignInClick = onSignInClick,
-                goToHome = goToHome
+                showLoading = showLoadingState
             )
         }
+
+        else -> {
+            Toast.makeText(
+                context,
+                state.value.toString(),
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
-
-
-
 }
 
 @Composable
@@ -106,9 +91,9 @@ fun LoginUI(
     login: (String, String) -> Pair<Boolean, Boolean>,
     validateUsername: (String) -> Boolean,
     validatePassword: (String) -> Boolean,
+    wrongPasswordState: State<Pair<Boolean, String>>,
     onSignInClick: () -> Unit,
-    goToHome: () -> Unit, //TODO("remove this in future")
-    showLoading: Boolean = false
+    showLoading: State<Boolean>
 ) {
     Surface(
         modifier = Modifier
@@ -116,27 +101,12 @@ fun LoginUI(
             .background(color = MaterialTheme.colorScheme.primaryContainer)
             .verticalScroll(state = rememberScrollState()),
     ) {
-        if (showLoading)
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f))
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(10.dp)
-                        .padding(50.dp),
-                    strokeWidth = 4.dp,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    trackColor = MaterialTheme.colorScheme.primaryContainer,
-                )
-            }
 
-        var username by remember { mutableStateOf("") }
+        var username by remember { mutableStateOf("anita.sharma") }
         var usernameError by remember { mutableStateOf(false) }
 
 
-        var password by remember { mutableStateOf("") }
+        var password by remember { mutableStateOf("password123") }
         var passwordError by remember { mutableStateOf(false) }
 
         Column(
@@ -201,6 +171,11 @@ fun LoginUI(
                 visualTransformation = PasswordVisualTransformation(),
                 label = { Text(text = stringResource(R.string.password)) }
             )
+            if (wrongPasswordState.value.first)
+                Text(
+                    wrongPasswordState.value.second,
+                    color = MaterialTheme.colorScheme.error
+                )
 
             ElevatedButton(
                 modifier = Modifier
@@ -210,9 +185,6 @@ fun LoginUI(
                     val validationResult = login(username, password)
                     usernameError = validationResult.first
                     passwordError = validationResult.second
-                    /*if (!usernameError && !passwordError) {
-                        goToHome()
-                    }*/
                 }) {
                 Text(text = stringResource(R.string.login))
             }
@@ -227,6 +199,10 @@ fun LoginUI(
                 }) {
                 Text(text = "Login With Google!(Go Home)")
             }
+
+            if (showLoading.value) {
+                LoginScreenLoadingView()
+            }
         }
     }
 }
@@ -234,7 +210,13 @@ fun LoginUI(
 @Composable
 @BothPreviews
 fun PreviewLoginUI() {
-    LoginUI({ _, _ ->
+    LoginUI(
+        login = { _, _ ->
         Pair(false, false)
-    }, { false }, { false }, {}, {})
+        },
+        validateUsername = { false },
+        validatePassword = { false },
+        wrongPasswordState = remember { mutableStateOf(Pair(false, "")) },
+        onSignInClick = {},
+        showLoading = remember { mutableStateOf(false) })
 }

@@ -23,7 +23,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(client: HttpClient): ApiService {
-        return ApiServiceImp(client)
+    fun provideApiService(client: HttpClient, sessionHandler: SessionHandler): ApiService {
+        return ApiServiceImp(client, sessionHandler)
     }
 }

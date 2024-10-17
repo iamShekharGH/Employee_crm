@@ -31,7 +31,8 @@ object ValidatePassword : Validate {
      */
     override fun check(text: String): Boolean {
 
-        val passwordRegex = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
+//        val passwordRegex = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
+        val passwordRegex = Regex("^(?=.*[a-zA-Z])(?=.*\\d)(?=\\S+$).{8,}$")
         return passwordRegex.matches(text)
 
     }

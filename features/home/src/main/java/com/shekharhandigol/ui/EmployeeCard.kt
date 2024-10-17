@@ -81,9 +81,10 @@ fun EmployeeCard(
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clip(RoundedCornerShape(8.dp)),
-                        placeholder = painterResource(R.mipmap.male_profile_pic),
+                        placeholder = painterResource(R.mipmap.male_profile_pic_removebg),
                         contentScale = ContentScale.FillWidth,
-                        contentDescription = "profile pic"
+                        contentDescription = "profile pic",
+                        error = painterResource(R.mipmap.male_profile_pic_removebg)
 
                     )
                     Surface(

@@ -2,11 +2,10 @@ package com.shekharhandigol.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shekharhandigol.data.models.Employee
 import com.shekharhandigol.domain.EmployeeRepository
+import com.shekharhandigol.domain.HomeUseCase
+import com.shekharhandigol.models.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -14,40 +13,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeScreenViewModel @Inject constructor(
-    private val repo: EmployeeRepository
+    private val homeUseCase: HomeUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Starting)
     val uiState = _uiState.asStateFlow()
 
-    private lateinit var employeeList: Flow<List<Employee>>
+    fun fetchEmployees() {
+        viewModelScope.launch {
+            _uiState.value = when (val res = homeUseCase.invoke()) {
+                is Resource.Error -> {
+                    HomeUiState.Error
+                }
 
-    init {
-        getList()
-        insertDummyData()
-        handle()
-    }
+                is Resource.Loading -> {
+                    HomeUiState.Loading
+                }
 
-    private fun insertDummyData() = viewModelScope.launch {
-        repo.insertDummy()
-        delay(2000L)
-        getList()
-    }
-
-    private fun getList(){
-        employeeList = repo.getAllEmployees()
-    }
-
-    private fun handle() = viewModelScope.launch {
-        employeeList.collect { list ->
-            _uiState.value = if (list.isEmpty()) {
-                HomeUiState.Empty
-            } else HomeUiState.EmployeeList(list)
-
+                is Resource.Success -> {
+                    HomeUiState.EmployeeList(res.data)
+                }
+            }
         }
     }
-
-
-    val _employeeList = repo.getAllEmployees()
-
 }

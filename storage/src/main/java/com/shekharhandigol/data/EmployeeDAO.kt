@@ -3,6 +3,7 @@ package com.shekharhandigol.data
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.shekharhandigol.data.models.Employee
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +23,7 @@ interface EmployeeDAO {
     @Query("SELECT * FROM employeesTable WHERE name LIKE :name")
     fun findByName(name: String): Flow<List<Employee>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg employees: Employee)
 
     @Insert

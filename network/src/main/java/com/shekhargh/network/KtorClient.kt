@@ -1,6 +1,5 @@
 package com.shekhargh.network
 
-import android.util.Log
 import com.shekharhandigol.datastore.SessionHandler
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -23,8 +22,8 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -84,11 +83,10 @@ class KtorClient @Inject constructor(
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val token = runBlocking {
-                            sessionHandler.getAuthToken().first()
+                        sessionHandler.getAuthToken().first()?.let {
+                            Timber.tag("AUTH_TOKEN\t:").i(it)
+                            BearerTokens(it, "")
                         }
-
-                        BearerTokens(token ?: "", "")
                     }
                 }
             }
@@ -98,10 +96,7 @@ class KtorClient @Inject constructor(
 
 class KtorLogger : Logger {
     override fun log(message: String) {
-        Log.v(
-            "KTOR_LOGGER",
-            message
-        )
+        Timber.tag("KTOR_LOGGER").v(message)
     }
 }
 

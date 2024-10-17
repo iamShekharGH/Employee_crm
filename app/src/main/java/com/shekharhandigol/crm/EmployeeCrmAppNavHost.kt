@@ -11,17 +11,7 @@ import com.shekharhandigol.common.Destinations
 import com.shekharhandigol.homeNavigationGraph
 import com.shekharhandigol.profileNavGraph
 import com.shekharhandigol.salarySummaryNavGraph
-
-
-fun travelToDestination(
-    navController: NavHostController,
-    destination: Destinations
-): () -> Unit {
-
-    return {
-        navController.navigate(destination)
-    }
-}
+import timber.log.Timber
 
 infix fun NavHostController.to(d: Destinations) {
     run { this.navigate(d) }
@@ -42,11 +32,24 @@ fun EmployeeCrmAppNavHost(
         authNavGraph(
             navController = go,
             onSignInClick = onSignInClick,
-            goToHome = { go to Destinations.Home },
+            goToHome = {
+
+                Timber.tag("AuthNavGraph").d(buildString {
+                    append("goToHome")
+                    append("go.graph.id = ${go.graph.id}")
+                })
+//                TODO("uncomment when check login is working")
+                go.popBackStack(go.graph.id, inclusive = true)
+                go to Destinations.Home
+            },
         )
         profileNavGraph(
             navController = go,
             goToHome = { go.popBackStack() },
+            gotoSplash = {
+                go.popBackStack()
+                go to Destinations.Splash
+            }
         )
         homeNavigationGraph(
             navController = go,

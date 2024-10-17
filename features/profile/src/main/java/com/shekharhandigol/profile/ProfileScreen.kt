@@ -1,6 +1,7 @@
 package com.shekharhandigol.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,7 +46,7 @@ import com.shekharhandigol.theme.BothPreviews
 import kotlinx.coroutines.launch
 
 @Composable
-fun ProfileScreen(goToHome: () -> Unit) {
+fun ProfileScreen(goToHome: () -> Unit, gotoSplash: () -> Unit) {
     val viewModel: ProfileScreenViewModel = hiltViewModel()
     val state = viewModel.profileUIState.collectAsStateWithLifecycle()
     val logout = { viewModel.clearUserInformation() }
@@ -55,7 +56,12 @@ fun ProfileScreen(goToHome: () -> Unit) {
         }
 
         is ProfileUiState.ThisIsProfileInfo -> {
-            ProfileUI(goToHome, logout, ui.userInformation)
+            ProfileUI(
+                goToHome = goToHome,
+                logout = logout,
+                goToSplash = gotoSplash,
+                userInformation = ui.userInformation
+            )
         }
     }
 }
@@ -83,7 +89,12 @@ fun EmptyProfileScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileUI(goToHome: () -> Unit, logout: () -> Unit, userInformation: UserInformation) {
+fun ProfileUI(
+    goToHome: () -> Unit,
+    logout: () -> Unit,
+    goToSplash: () -> Unit,
+    userInformation: UserInformation
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -123,8 +134,8 @@ fun ProfileUI(goToHome: () -> Unit, logout: () -> Unit, userInformation: UserInf
                     IconButton(onClick = {
                         scope.launch {
                             logout()
-                            snackbarHostState.showSnackbar("Nope! Not there")
-                            goToHome()
+//                            snackbarHostState.showSnackbar("Logging Out!")
+                            goToSplash()
                         }
                     }) {
                         Icon(
@@ -160,9 +171,9 @@ fun ProfileUI(goToHome: () -> Unit, logout: () -> Unit, userInformation: UserInf
                         contentDescription = "Profile Picture",
                         modifier = Modifier
                             .size(100.dp)
-                            .padding(end = 8.dp)
-                            .size(150.dp)
-
+                            .padding(end = 8.dp, start = 8.dp)
+                            .size(150.dp),
+                        error = painterResource(R.mipmap.profile),
                     )
                     Column(
                         modifier = Modifier
@@ -282,14 +293,14 @@ fun ProfileUI(goToHome: () -> Unit, logout: () -> Unit, userInformation: UserInf
                     ) {
                         ElevatedButton(onClick = {
                             scope.launch {
-                                snackbarHostState.showSnackbar("You have came!!")
+                                snackbarHostState.showSnackbar("Your salary has been credited.")
                             }
                         }, enabled = userInformation.salaryCredited) {
                             Text("Yes")
                         }
                         ElevatedButton(onClick = {
                             scope.launch {
-                                snackbarHostState.showSnackbar("Why have You not came??")
+                                snackbarHostState.showSnackbar("Sorry for the inconvenience.")
                             }
                         }, enabled = !userInformation.salaryCredited) {
                             Text("No")
@@ -304,6 +315,11 @@ fun ProfileUI(goToHome: () -> Unit, logout: () -> Unit, userInformation: UserInf
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
                     .fillMaxWidth()
+                    .clickable {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Sorry! in development.")
+                        }
+                    }
             ) {
                 Column(
                     modifier = Modifier
@@ -348,7 +364,10 @@ fun ProfileUI(goToHome: () -> Unit, logout: () -> Unit, userInformation: UserInf
 @Composable
 fun PreviewProfileUI() {
     ProfileUI(
-        { }, {}, UserInformation(
+        goToHome = { },
+        logout = {},
+        goToSplash = {},
+        userInformation = UserInformation(
             eid = 1,
             name = "Shekhar Handigol",
             title = "Software Engineer",
@@ -357,7 +376,7 @@ fun PreviewProfileUI() {
             presentToday = true,
             salaryCredited = false,
             email = "william.strong@my-own-personal-domain.com",
-            employeeGender = EmployeeGender.Male,
+            employeeGender = EmployeeGender.MALE,
             photoUrl = "",
             salary = 50000000
         )

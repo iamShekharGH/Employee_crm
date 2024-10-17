@@ -50,6 +50,7 @@ dependencies {
     implementation(project(":theme"))
     implementation(project(":common"))
     implementation(project(":storage"))
+    implementation(project(":network"))
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
@@ -67,7 +68,6 @@ dependencies {
     implementation(libs.firebase.ui.auth)
     // Required only if Facebook login support is required
     // Find the latest Facebook SDK releases here: https://goo.gl/Ce5L94
-    implementation(libs.facebook.android.sdk)
     implementation(libs.firebase.analytics)
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)

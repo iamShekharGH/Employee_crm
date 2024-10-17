@@ -30,11 +30,13 @@ fun SplashScreen(
     navigateToHome: () -> Unit,
     viewModel: LoginScreenViewModel
 ) {
+
     val state = viewModel.loginStateFlow.collectAsStateWithLifecycle()
     when (state.value) {
         LoginUserUiState.UserState.UserIsNew,
         LoginUserUiState.FirstBoot -> {
             Splash(navigateToLogin)
+            viewModel.checkUserSignInState()
         }
 
         LoginUserUiState.UserState.UserIsLoggedIn -> {
@@ -45,9 +47,7 @@ fun SplashScreen(
             navigateToLogin()
         }
 
-        LoginUserUiState.Response.Error,
-        LoginUserUiState.Response.Loading,
-        is LoginUserUiState.Response.Success -> {
+        is LoginUserUiState.Response -> {
             println("observing from Splash Screen\t:${state.value} ")
         }
     }

@@ -6,7 +6,7 @@ sealed class LoginUserUiState {
     data object FirstBoot : LoginUserUiState()
 
     sealed class Response : LoginUserUiState() {
-        data object Error : Response()
+        data class Error(val errorMessage: String) : Response()
         data class Success(val userInformation: UserInformation) : Response()
         data object Loading : Response()
     }
